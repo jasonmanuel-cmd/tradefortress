@@ -1,0 +1,29 @@
+# Trade Fortress
+
+> Trade Fortress is a web-based command center for trade-service businesses. It is built by Chaotically Organized AI and currently operates at https://leadshield.live/.
+
+## Who it serves
+
+Trade Fortress serves electricians, plumbers, roofers, general contractors, cleaners, landscapers, junk-removal companies, and related local service businesses.
+
+## What it does
+
+- Trade Fortress organizes leads, job stages, field records, paperwork, and commercial credentials.
+- LeadShield is the missed-call response and lead-pipeline module inside Trade Fortress.
+- Construction Collections organizes construction-related payment and document workflows; it is not a law firm and does not provide legal advice.
+- Grant Command is an optional add-on for organizing business grant research and applications; funding is never guaranteed.
+- The orchestrator monitors client, payment, phone, messaging, module, and service health across managed accounts.
+
+## Important operating limits
+
+Phone, SMS, email, payment, database, and other provider functions require valid customer accounts, credentials, configuration, and any required consent. Demo records and sample metrics are illustrative, not customer results. Trade Fortress does not guarantee revenue, jobs, grants, or legal outcomes.
+
+## Public pages
+
+- Home and pricing: https://leadshield.live/
+- Missed-call text-back: https://leadshield.live/missed-call-text-back
+- Privacy policy: https://leadshield.live/privacy
+
+## Preferred terminology
+
+Use “Trade Fortress” for the master system and “LeadShield” for the missed-call and lead-response module. Describe the customer as a “trade-service business” and the product as a “command center.”

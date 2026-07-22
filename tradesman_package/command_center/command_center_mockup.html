@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRADE FORTRESS — COMMAND CENTER</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] },
+          colors: { gold: '#C5A03D', ink: '#0A0F18', steel: '#1A2235', alert: '#E85D3A', safe: '#2ECC71', surface: '#111827' },
+        }
+      }
+    }
+  </script>
+  <style>body{background-color:#0A0F18;color:#EAEAEA;font-family:'Inter',sans-serif}</style>
+</head>
+<body class="min-h-screen">
+
+  <!-- NAV -->
+  <nav class="bg-steel/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-gold to-amber-600 flex items-center justify-center shadow-lg shadow-gold/20">
+          <span class="font-black text-ink text-sm">TF</span>
+        </div>
+        <div>
+          <h1 class="text-white font-black text-base tracking-tight leading-none">TRADE FORTRESS</h1>
+          <span class="text-[10px] text-gray-400 uppercase tracking-[0.15em] font-semibold">Command Center</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 text-[11px] font-mono text-gray-300">
+        <span class="text-safe font-bold">● LIVE</span>
+        <span>Jason Manuel</span>
+        <span class="text-gray-500">COAI Bakersfield</span>
+        <span class="text-gold">661 683 0228</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- TOP STATS -->
+  <header class="max-w-6xl mx-auto px-6 pt-8 pb-4">
+    <h2 class="text-2xl font-black text-white tracking-tight">Dashboard</h2>
+    <p class="text-gray-400 text-sm mt-1">One screen. All modules. Real-time data from your deployed repos.</p>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+      <div class="bg-steel border border-white/5 rounded-2xl p-5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-16 h-16 bg-gold/10 rounded-full -mr-8 -mt-8 blur-2xl"></div>
+        <p class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">Missed Calls Today</p>
+        <p class="text-3xl font-black text-white mt-1">7</p>
+        <p class="text-xs text-safe font-semibold mt-2">3 auto-texted → CRM</p>
+      </div>
+      <div class="bg-steel border border-white/5 rounded-2xl p-5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-16 h-16 bg-amber-500/10 rounded-full -mr-8 -mt-8 blur-2xl"></div>
+        <p class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">Active Leads</p>
+        <p class="text-3xl font-black text-white mt-1">12</p>
+        <p class="text-xs text-gold font-semibold mt-2">4 qualified this week</p>
+      </div>
+      <div class="bg-steel border border-white/5 rounded-2xl p-5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-16 h-16 bg-alert/10 rounded-full -mr-8 -mt-8 blur-2xl"></div>
+        <p class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">Pending Filings</p>
+        <p class="text-3xl font-black text-white mt-1">2</p>
+        <p class="text-xs text-alert font-semibold mt-2">AI confidence: 0.88</p>
+      </div>
+      <div class="bg-steel border border-white/5 rounded-2xl p-5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-400/10 rounded-full -mr-8 -mt-8 blur-2xl"></div>
+        <p class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">Grants Found</p>
+        <p class="text-3xl font-black text-white mt-1">5</p>
+        <p class="text-xs text-emerald-400 font-semibold mt-2">1 proposal submitted</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- 4 QUADRANTS -->
+  <main class="max-w-6xl mx-auto px-6 pb-20 grid md:grid-cols-2 gap-4">
+
+    <!-- LEAD SHIELD -->
+    <section class="bg-steel border border-white/5 rounded-3xl p-6 relative overflow-hidden hover:border-gold/30 transition-colors">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold/20 to-gold/5 border border-gold/20 flex items-center justify-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C5A03D" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L6.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <h3 class="text-white font-black text-lg tracking-tight">Lead Shield</h3>
+        <span class="ml-auto text-[10px] bg-safe/10 text-safe px-2 py-0.5 rounded-full font-mono font-bold">LIVE</span>
+      </div>
+      <div class="space-y-3">
+        <div class="bg-ink rounded-xl p-3 border border-white/5"><p class="text-[10px] text-gray-500 uppercase tracking-wide">Missed Call — 8:42 AM</p><p class="text-sm font-semibold text-white">"TandM Hauling — Unpaid Invoice Inquiry"</p><p class="text-xs text-safe mt-1">Auto-text sent → CRM entry created</p></div>
+        <div class="bg-ink rounded-xl p-3 border border-white/5"><p class="text-[10px] text-gray-500 uppercase tracking-wide">Missed Call — 9:15 AM</p><p class="text-sm font-semibold text-white">"New Client — Bathroom Remodel Quote"</p><p class="text-xs text-gold mt-1">Awaiting your review → 30 min SLA</p></div>
+        <a href="#" class="block text-center text-xs font-bold text-gold hover:text-white transition-colors pt-2">OPEN FULL CRM →</a>
+      </div>
+    </section>
+
+    <!-- LEGAL SHIELD -->
+    <section class="bg-steel border border-white/5 rounded-3xl p-6 relative overflow-hidden hover:border-gold/30 transition-colors">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/5 border border-amber-500/20 flex items-center justify-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <h3 class="text-white font-black text-lg tracking-tight">Legal Shield</h3>
+        <span class="ml-auto text-[10px] bg-safe/10 text-safe px-2 py-0.5 rounded-full font-mono font-bold">LIVE</span>
+      </div>
+      <div class="space-y-3">
+        <div class="bg-ink rounded-xl p-3 border border-white/5"><p class="text-[10px] text-gray-500 uppercase tracking-wide">Filing #SC-4821</p><p class="text-sm font-semibold text-white">Kern County Small Claims — $1,250 Claim</p><p class="text-xs text-safe mt-1">AI Packet Generated → PDFShift Delivered → Email Sent</p></div>
+        <div class="bg-ink rounded-xl p-3 border border-white/5"><p class="text-[10px] text-gray-500 uppercase tracking-wide">Filing #SC-4822 (Pending)</p><p class="text-sm font-semibold text-white">Unpaid Invoice — Roofing Job</p><p class="text-xs text-gold mt-1">AI Confidence: 0.91 → Processing</p></div>
+        <a href="#" class="block text-center text-xs font-bold text-gold hover:text-white transition-colors pt-2">OPEN FULL PIPELINE →</a>
+      </div>
+    </section>
+
+    <!-- LEAD ENGINE -->
+    <section class="bg-steel border border-white/5 rounded-3xl p-6 relative overflow-hidden hover:border-gold/30 transition-colors">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400/20 to-emerald-600/5 border border-emerald-400/20 flex items-center justify-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="text-white font-black text-lg tracking-tight">Lead Engine</h3>
+        <span class="ml-auto text-[10px] bg-gold/10 text-gold px-2 py-0.5 rounded-full font-mono font-bold">12 NEW</span>
+      </div>
+      <div class="space-y-3">
+        <div class="bg-ink rounded-xl p-3 border border-white/5"><p class="text-[10px] text-gray-500 uppercase tracking-wide">Source: Google Search</p><p class="text-sm font-semibold text-white">"Handyman Bakersfield" → Qualified Lead</p><p class="text-xs text-emerald-400 mt-1">Pushed to CRM → Auto-email queued</p></div>
+        <div class="bg-ink rounded-xl p-3 border border-white/5"><p class="text-[10px] text-gray-500 uppercase tracking-wide">Source: Nextdoor</p><p class="text-sm font-semibold text-white">Kitchen Remodel — $8K Estimate Range</p><p class="text-xs text-gold mt-1">Ready for quote — 2 hr response window</p></div>
+        <a href="#" class="block text-center text-xs font-bold text-gold hover:text-white transition-colors pt-2">OPEN FULL PIPELINE →</a>
+      </div>
+    </section>
+
+    <!-- GRANT COMMAND -->
+    <section class="bg-steel border border-white/5 rounded-3xl p-6 relative overflow-hidden hover:border-gold/30 transition-colors">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-400/20 to-rose-600/5 border border-rose-400/20 flex items-center justify-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3 class="text-white font-black text-lg tracking-tight">Grant Command</h3>
+        <span class="ml-auto text-[10px] bg-rose-400/10 text-rose-400 px-2 py-0.5 rounded-full font-mono font-bold">DEADLINE</span>
+      </div>
+      <div class="space-y-3">
+        <div class="bg-ink rounded-xl p-3 border border-white/5"><p class="text-[10px] text-gray-500 uppercase tracking-wide">SBIR Phase I — $150K Potential</p><p class="text-sm font-semibold text-white">AI-Powered Trade Tools — Proposal Drafting</p><p class="text-xs text-rose-400 mt-1">Deadline: Aug 15 — Claude writing proposal</p></div>
+        <div class="bg-ink rounded-xl p-3 border border-white/5"><p class="text-[10px] text-gray-500 uppercase tracking-wide">Grants.gov — Small Biz</p><p class="text-sm font-semibold text-white">Contractor Equipment Upgrade</p><p class="text-xs text-gold mt-1">Found 7 days ago → Draft stage</p></div>
+        <a href="#" class="block text-center text-xs font-bold text-gold hover:text-white transition-colors pt-2">OPEN FULL PIPELINE →</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="max-w-6xl mx-auto px-6 pb-8 border-t border-white/5 pt-6 flex items-center justify-between text-[11px] text-gray-500 font-mono">
+    <span>TRADE FORTRESS COMMAND CENTER</span>
+    <span>BUILT BY JASON MANUEL — CHAOTICALLY ORGANIZED AI</span>
+    <span>(661) 683 0228</span>
+  </footer>
+
+</body>
+</html>

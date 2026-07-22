@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>COAI Lead Engine — AI-Powered Local Lead Generation</title>
+<meta name="description" content="AI-powered lead generation platform for local service businesses. Find, score, and reach out to high-intent prospects with zero manual research."/>
+<meta name="keywords" content="lead generation, local business leads, AI prospecting, Bakersfield businesses, COAI, Chaotically Organized AI"/>
+<meta name="author" content="Chaotically Organized AI"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta property="og:title" content="COAI Lead Engine — AI-Powered Local Lead Generation"/>
+<meta property="og:description" content="Find, score, and reach out to high-intent local business prospects automatically. Built by Chaotely Organized AI in Bakersfield, CA."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://coaileads.vercel.app"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="COAI Lead Engine — Local Lead Generation"/>
+<meta name="twitter:description" content="AI-powered lead scoring and outreach for local service businesses."/>
+<link rel="canonical" href="https://coaileads.vercel.app"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "COAI Lead Engine",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "AI-powered lead generation platform for local service businesses. Scans Google Places API, scores prospects by pain signals, and generates personalized outreach messages.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": {
+    "@type": "Organization",
+    "name": "Chaotically Organized AI",
+    "url": "https://chaoticallyorganizedai.com"
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;590;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#010102;
+  --panel:#0f1011;
+  --surface:#191a1b;
+  --surface2:#23252a;
+  --surface3:#28282c;
+  --border:rgba(255,255,255,0.05);
+  --border-std:rgba(255,255,255,0.08);
+  --border-hot:rgba(255,255,255,0.15);
+  --green:#27a644;
+  --green-dim:rgba(39,166,68,0.08);
+  --red:#ff3b30;
+  --amber:#ffb800;
+  --blue:#3b9eff;
+  --purple:#a78bfa;
+  --white:#f7f8f8;
+  --secondary:#d0d6e0;
+  --muted:#8a8f98;
+  --quaternary:#62666d;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,s sans-serif;
+  --radius:6px;
+  --radius-lg:8px;
+  --radius-xl:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;font-feature-settings:'cv01','ss03';}
+::selection{background:rgba(39,166,68,0.2);color:var(--white);}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border-hot);border-radius:3px;}
+a{color:var(--green);text-decoration:none;transition:color 0.15s;}
+a:hover{color:var(--secondary);}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all 0.15s;font-weight:500;}
+.btn:hover{border-color:var(--green);color:var(--green);background:var(--green-dim);}
+.btn-primary{background:var(--green);color:var(--bg);border:1px solid var(--green);font-weight:700;}
+.btn-primary:hover{background:#3ddc5e;color:var(--bg);}
+.btn-danger{border-color:rgba(255,59,48,0.3);color:var(--red);}
+.btn-danger:hover{background:rgba(255,59,48,0.08);}
+
+/* HEADER */
+header{background:var(--panel);border-bottom:1px solid var(--border);padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);background:rgba(15,16,17,0.92);}
+.logo{font-weight:700;font-size:11px;letter-spacing:0.12em;color:var(--white);display:flex;align-items:center;gap:8px;font-family:var(--mono);}
+.logo span{color:var(--green);}
+.logo .ver{color:var(--amber);margin-left:4px;}
+.header-right{display:flex;align-items:center;gap:12px;}
+.header-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:0.06em;}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.25}}
+.god-badge{background:linear-gradient(135deg,rgba(255,184,0,0.15),rgba(255,59,48,0.15));border:1px solid rgba(255,184,0,0.3);color:var(--amber);font-family:var(--mono);font-size:9px;letter-spacing:0.14em;padding:3px 10px;border-radius:4px;}
+
+/* LAYOUT */
+.app{display:grid;grid-template-columns:320px 1fr;height:calc(100vh - 52px);}
+
+/* SIDEBAR */
+.sidebar{background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;}
+.sidebar-section{padding:1rem 1.25rem;border-bottom:1px solid var(--border);}
+.sidebar-label{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;justify-content:space-between;}
+.field{margin-bottom:0.75rem;}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:0.04em;font-weight:500;}
+.field input,.field select{width:100%;background:var(--surface);border:1px solid var(--border-std);color:var(--white);font-family:var(--sans);font-size:13px;padding:8px 12px;border-radius:var(--radius);outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+.field input:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 1px rgba(39,166,68,0.2);}
+.field select option{background:var(--surface);}
+.field input::placeholder{color:var(--quaternary);}
+
+/* VERTICAL GROUPS */
+.vertical-group{margin-bottom:1rem;}
+.vertical-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.vertical-name{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:3px 8px;border-radius:4px;font-weight:500;}
+.vn-trades{color:#fb923c;background:rgba(251,146,60,0.08);border:1px solid rgba(251,146,60,0.15);}
+.vn-medical{color:#34d399;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);}
+.vn-legal{color:#a78bfa;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);}
+.vn-auto{color:#60a5fa;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.15);}
+.vn-food{color:#f472b6;background:rgba(244,114,182,0.08);border:1px solid rgba(244,114,182,0.15);}
+.vn-beauty{color:#e879f9;background:rgba(232,121,249,0.08);border:1px solid rgba(232,121,249,0.15);}
+.vn-home{color:#fbbf24;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);}
+.vn-fitness{color:#4ade80;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.15);}
+.vn-biz{color:#94a3b8;background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.15);}
+.vn-retail{color:#f87171;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.15);}
+.vn-select-all{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;background:none;border:1px solid var(--border);color:var(--muted);padding:2px 8px;border-radius:4px;cursor:pointer;transition:all 0.15s;}
+.vn-select-all:hover{border-color:var(--green);color:var(--green);}
+
+/* CAT GRID */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.cat-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:10px;padding:6px 8px;border-radius:var(--radius);cursor:pointer;transition:all 0.15s;text-align:center;font-family:var(--sans);font-weight:500;}
+.cat-btn:hover{border-color:var(--border-hot);color:var(--white);background:var(--surface2);}
+.cat-btn.active{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+
+/* GLOBAL SELECT */
+.global-select-row{display:flex;gap:5px;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);}
+.gsr-btn{flex:1;background:none;border:1px solid var(--border);color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:7px;border-radius:var(--radius);cursor:pointer;transition:all 0.15s;}
+.gsr-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-dim);}
+
+/* SEARCH BTN */
+.search-btn{width:100%;background:var(--green);color:var(--bg);border:none;border-radius:var(--radius);font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:13px;cursor:pointer;transition:opacity 0.15s;margin-top:0.5rem;}
+.search-btn:hover{opacity:0.9;}
+.search-btn:disabled{opacity:0.35;cursor:not-allowed;}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0.9rem 1.25rem;border-bottom:1px solid var(--border);}
+.stat-box{background:var(--surface);border:1px solid var(--border-std);border-radius:var(--radius);padding:0.6rem;text-align:center;}
+.stat-num{font-family:var(--mono);font-size:1.2rem;font-weight:700;line-height:1;}
+.stat-num.green{color:var(--green);}
+.stat-num.amber{color:var(--amber);}
+.stat-num.red{color:var(--red);}
+.stat-num.blue{color:var(--blue);}
+.stat-lbl{font-size:9px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;}
+
+/* FILTERS */
+.filter-row{display:flex;gap:5px;padding:0.8rem 1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.filter-chip,.sort-chip{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:0.1em;padding:5px 10px;border-radius:4px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;white-space:nowrap;}
+.filter-chip:hover,.sort-chip:hover{border-color:var(--border-hot);color:var(--white);}
+.filter-chip.active,.sort-chip.active{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+.sort-row{display:flex;align-items:center;gap:8px;padding:0.55rem 1.25rem;border-bottom:1px solid var(--border);}
+.sort-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.sort-select{background:var(--surface);border:1px solid var(--border-std);color:var(--white);font-family:var(--mono);font-size:10px;padding:4px 8px;border-radius:var(--radius);outline:none;cursor:pointer;}
+
+/* MAIN PANEL */
+.main{display:flex;flex-direction:column;overflow:hidden;}
+.results-wrap{flex:1;overflow-y:auto;padding:1rem 1.25rem;}
+
+/* EMPTY STATE */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;gap:1rem;opacity:0.55;}
+.empty-icon{font-family:var(--mono);font-size:2.5rem;color:var(--green);}
+.empty-title{font-size:15px;font-weight:590;color:var(--white);}
+.empty-sub{font-size:13px;color:var(--muted);max-width:300px;line-height:1.6;}
+
+/* LOADING */
+.loading-wrap{display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:1.5rem;}
+.loader-bar{width:240px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.loader-fill{height:100%;background:var(--green);border-radius:2px;animation:load 2.5s ease-in-out infinite;}
+@keyframes load{0%{width:0%;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0%;margin-left:100%}}
+.loader-text{font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:0.1em;}
+.loader-progress{font-family:var(--mono);font-size:10px;color:var(--amber);}
+
+/* LEAD CARDS */
+.lead-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.15rem;margin-bottom:8px;transition:border-color 0.2s,transform 0.15s;position:relative;}
+.lead-card:hover{border-color:var(--border-hot);transform:translateX(2px);}
+.lead-card.priority-high{border-left:3px solid var(--red);}
+.lead-card.priority-med{border-left:3px solid var(--amber);}
+.lead-card.priority-low{border-left:3px solid var(--border-hot);}
+.lead-card.contacted{opacity:0.4;}
+.lead-card.closed{border-color:var(--green);background:var(--green-dim);}
+.lead-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;gap:0.5rem;}
+.lead-name{font-size:14px;font-weight:590;color:var(--white);line-height:1.3;}
+.lead-score{font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0;}
+.score-hot{background:rgba(255,59,48,0.12);color:var(--red);border:1px solid rgba(255,59,48,0.2);}
+.score-warm{background:rgba(255,184,0,0.1);color:var(--amber);border:1px solid rgba(255,184,0,0.15);}
+.score-cold{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
+.lead-meta{display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;flex-wrap:wrap;}
+.lead-cat-tag{font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;background:var(--surface);border:1px solid var(--border);padding:1px 6px;border-radius:3px;}
+.lead-address{font-size:11px;color:var(--quaternary);}
+.lead-signals{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:0.75rem;}
+.signal-tag{font-size:9px;padding:2px 7px;border-radius:3px;font-family:var(--mono);font-weight:500;}
+.sig-bad{background:rgba(255,59,48,0.08);color:var(--red);border:1px solid rgba(255,59,48,0.12);}
+.sig-warn{background:rgba(255,184,0,0.08);color:var(--amber);border:1px solid rgba(255,184,0,0.12);}
+.sig-ok{background:rgba(39,166,68,0.06);color:var(--green);border:1px solid rgba(39,166,68,0.1);}
+.lead-actions{display:flex;gap:4px;flex-wrap:wrap;}
+.action-btn{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;padding:5px 9px;border-radius:var(--radius);border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all 0.15s;font-weight:500;}
+.action-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-dim);}
+.action-btn.mark-contacted{border-color:rgba(255,184,0,0.25);color:var(--amber);}
+.action-btn.mark-closed{border-color:rgba(39,166,68,0.25);color:var(--green);}
+.lead-note{margin-top:0.75rem;display:none;}
+.lead-note textarea{width:100%;background:var(--surface);border:1px solid var(--border-std);color:var(--white);font-family:var(--sans);font-size:12px;padding:8px 10px;border-radius:var(--radius);resize:none;height:60px;outline:none;}
+.lead-note textarea:focus{border-color:var(--green);}
+
+/* OUTREACH MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--panel);border:1px solid var(--border-hot);border-radius:var(--radius-xl);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;}
+.modal-header{padding:1.25rem 1.4rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.modal-title{font-size:14px;font-weight:590;}
+.modal-biz{font-family:var(--mono);font-size:10px;color:var(--green);margin-top:2px;}
+.modal-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px;border-radius:4px;transition:color 0.15s;}
+.modal-close:hover{color:var(--white);}
+.modal-body{padding:1.25rem 1.4rem;}
+.msg-type-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.25rem;}
+.msg-type-btn,.filter-tab{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:8px;border-radius:var(--radius);cursor:pointer;text-align:center;transition:all 0.15s;font-family:var(--sans);font-weight:500;}
+.msg-type-btn:hover,.filter-tab:hover,.filter-tab.active{border-color:var(--green);color:var(--green);background:var(--green-dim);}
+.msg-type-btn.active{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+.msg-preview{background:var(--surface);border:1px solid var(--border-std);border-radius:var(--radius);padding:1rem;font-size:12.5px;color:var(--white);line-height:1.75;white-space:pre-wrap;margin-bottom:1rem;min-height:120px;font-family:var(--sans);}
+.modal-actions{display:flex;gap:8px;}
+.copy-btn{flex:1;background:var(--green);color:var(--bg);border:none;border-radius:var(--radius);font-family:var(--sans);font-size:12px;font-weight:700;padding:10px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;}
+.copy-btn:hover{opacity:0.9;}
+.dismiss-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);font-size:12px;padding:10px 16px;cursor:pointer;}
+.dismiss-btn:hover{border-color:var(--border-hot);color:var(--white);}
+
+/* EXPORT BAR */
+.export-bar{background:var(--panel);border-top:1px solid var(--border);padding:0.65rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.export-info{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.04em;}
+.export-actions{display:flex;gap:6px;}
+
+/* HISTORY PANEL */
+.history-panel{border-top:1px solid var(--border);padding:0.75rem 1.25rem;background:var(--panel);}
+.history-title{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;margin-bottom:0.5rem;}
+.history-list{display:flex;flex-direction:column;gap:4px;max-height:120px;overflow-y:auto;}
+.history-item{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:11px;cursor:pointer;transition:all 0.15s;}
+.history-item:hover{border-color:var(--border-hot);}
+.history-item .h-time{font-family:var(--mono);font-size:9px;color:var(--quaternary);}
+.history-item .h-meta{color:var(--muted);}
+.history-item .h-count{color:var(--green);font-family:var(--mono);font-weight:700;}
+
+/* LOGIN OVERLAY */
+.login-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.login-box{background:var(--panel);border:1px solid var(--border-std);border-radius:var(--radius-xl);padding:2.5rem;max-width:380px;width:100%;text-align:center;}
+.login-box h2{font-size:18px;font-weight:590;margin-bottom:0.5rem;}
+.login-box p{font-size:12px;color:var(--muted);margin-bottom:1.5rem;}
+.login-box input{width:100%;background:var(--surface);border:1px solid var(--border-std);color:var(--white);font-family:var(--sans);font-size:14px;padding:12px 14px;border-radius:var(--radius);outline:none;margin-bottom:1rem;text-align:center;letter-spacing:0.05em;}
+.login-box input:focus{border-color:var(--green);box-shadow:0 0 0 1px rgba(39,166,68,0.2);}
+.login-error{display:none;color:var(--red);font-size:11px;margin-top:0.75rem;font-family:var(--mono);}
+.login-hint{font-size:10px;color:var(--quaternary);margin-top:1rem;font-family:var(--mono);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto 1fr;}
+  .sidebar{max-height:40vh;border-right:none;border-bottom:1px solid var(--border);}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <div style="font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:0.16em;margin-bottom:1.25rem;">COAI LEAD ENGINE v2.0</div>
+    <h2>God Mode Access</h2>
+    <p>Enter your access key to unlock the prospector engine.</p>
+    <input type="password" id="access-key" placeholder="Enter access key..." autofocus onkeydown="if(event.key==='Enter')unlockEngine()"/>
+    <button class="search-btn" style="margin-top:0.5rem;" onclick="unlockEngine()">Unlock Engine</button>
+    <div class="login-error" id="login-error">Invalid key. Try again.</div>
+    <div class="login-hint">Contact Jason Manuel for access</div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">COAI <span>LEAD ENGINE</span><span class="ver">v2.0</span></div>
+  <div class="header-right">
+    <div class="god-badge">⚡ GOD MODE</div>
+    <div class="header-status"><span class="pulse"></span>PROSPECTOR READY</div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Target Location</div>
+      <div class="field">
+        <label>City / Area</label>
+        <input type="text" id="location" value="Bakersfield, CA" placeholder="City, State"/>
+      </div>
+      <div class="field">
+        <label>Radius</label>
+        <select id="radius">
+          <option value="2000">2 miles — Core 661</option>
+          <option value="5000" selected>5 miles — Greater Bakersfield</option>
+          <option value="10000">10 miles — Kern County</option>
+          <option value="25000">25 miles — Central Valley</option>
+          <option value="50000">50 miles — Max Range</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="global-select-row">
+      <button class="gsr-btn" onclick="selectAllCats()">Select All</button>
+      <button class="gsr-btn" onclick="clearAllCats()">Clear All</button>
+      <button class="gsr-btn" onclick="selectHotOnly()">Hot Only</button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Industry Categories <span id="cat-count" style="color:var(--green);font-size:9px;font-family:var(--mono);">0 selected</span></div>
+      <div class="field">
+        <input type="text" id="cat-search" placeholder="Search categories..." oninput="filterCats(this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--white);font-family:var(--sans);font-size:12px;padding:7px 10px;border-radius:4px;outline:none;"/>
+      </div>
+
+      <div class="vertical-group">
+        <div class="vertical-header">
+          <span class="vertical-name vn-trades">🔧 Trades</span>
+          <button class="vn-select-all" onclick="toggleVertical('trades')">All</button>
+        </div>
+        <div class="cat-grid">
+          <div class="cat-btn" data-cat="hvac" data-vertical="trades" onclick="toggleCat(this)">HVAC</div>
+          <div class="cat-btn" data-cat="plumber" data-vertical="trades" onclick="toggleCat(this)">Plumbing</div>
+          <div class="cat-btn" data-cat="electrician" data-vertical="trades" onclick="toggleCat(this)">Electrical</div>
+          <div class="cat-btn" data-cat="roofing contractor" data-vertical="trades" onclick="toggleCat(this)">Roofing</div>
+          <div class="cat-btn" data-cat="general contractor" data-vertical="trades" onclick="toggleCat(this)">Contractor</div>
+          <div class="cat-btn" data-cat="flooring contractor" data-vertical="trades" onclick="toggleCat(this)">Flooring</div>
+          <div class="cat-btn" data-cat="painting contractor" data-vertical="trades" onclick="toggleCat(this)">Painting</div>
+          <div class="cat-btn" data-cat="fencing contractor" data-vertical="trades" onclick="toggleCat(this)">Fencing</div>
+          <div class="cat-btn" data-cat="concrete contractor" data-vertical="trades" onclick="toggleCat(this)">Concrete</div>
+          <div class="cat-btn" data-cat="handyman" data-vertical="trades" onclick="toggleCat(this)">Handyman</div>
+        </div>
+      </div>
+
+      <div class="vertical-group">
+        <div class="vertical-header">
+          <span class="vertical-name vn-home">🏠 Home Services</span>
+          <button class="vn-select-all" onclick="toggleVertical('home')">All</button>
+        </div>
+        <div class="cat-grid">
+          <div class="cat-btn" data-cat="pest control" data-vertical="home" onclick="toggleCat(this)">Pest Control</div>
+          <div class="cat-btn" data-cat="landscaping" data-vertical="home" onclick="toggleCat(this)">Landscaping</div>
+          <div class="cat-btn" data-cat="lawn care" data-vertical="home" onclick="toggleCat(this)">Lawn Care</div>
+          <div class="cat-btn" data-cat="house cleaning" data-vertical="home" onclick="toggleCat(this)">Cleaning</div>
+          <div class="cat-btn" data-cat="pool service" data-vertical="home" onclick="toggleCat(this)">Pool Service</div>
+          <div class="cat-btn" data-cat="moving company" data-vertical="home" onclick="toggleCat(this)">Moving</div>
+          <div class="cat-btn" data-cat="solar panel installation" data-vertical="home" onclick="toggleCat(this)">Solar</div>
+          <div class="cat-btn" data-cat="security company" data-vertical="home" onclick="toggleCat(this)">Security</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Lead Filters</div>
+      <div class="field">
+        <label>Min Reviews</label>
+        <select id="min-reviews">
+          <option value="0">Any (including 0)</option>
+          <option value="1" selected>At least 1 review</option>
+          <option value="5">5+ reviews</option>
+          <option value="10">10+ reviews</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Max Rating (shows pain)</label>
+        <select id="max-rating">
+          <option value="5">Any rating</option>
+          <option value="4" selected>Under 4.0 stars</option>
+          <option value="3.5">Under 3.5 stars</option>
+          <option value="3">Under 3.0 stars</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Results Per Category</label>
+        <select id="results-count">
+          <option value="20">20 per category</option>
+          <option value="40" selected>40 per category (paginated)</option>
+          <option value="60">60 per category (max)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <button class="search-btn" id="search-btn" onclick="runSearch()">◉ SCAN FOR LEADS</button>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--quaternary);line-height:1.6;margin-top:10px;text-align:center;">
+        🔒 API key secured via Vercel env vars
+      </div>
+    </div>
+
+    <div class="sidebar-section" style="flex:1;">
+      <div class="sidebar-label">Session Stats</div>
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <div class="session-stat"><span style="color:var(--muted);">Leads found</span><span id="s-total" style="color:var(--white);font-family:var(--mono);">0</span></div>
+        <div class="session-stat"><span style="color:var(--muted);">Hot leads</span><span id="s-hot" style="color:var(--red);font-family:var(--mono);">0</span></div>
+        <div class="session-stat"><span style="color:var(--muted);">No website</span><span id="s-nosite2" style="color:var(--amber);font-family:var(--mono);">0</span></div>
+        <div class="session-stat"><span style="color:var(--muted);">Contacted</span><span id="s-contacted" style="color:var(--amber);font-family:var(--mono);">0</span></div>
+        <div class="session-stat"><span style="color:var(--muted);">Closed</span><span id="s-closed" style="color:var(--green);font-family:var(--mono);">0</span></div>
+      </div>
+    </div>
+
+    <!-- SEARCH HISTORY -->
+    <div class="sidebar-section" id="history-section" style="display:none;">
+      <div class="history-title">Recent Scans</div>
+      <div class="history-list" id="history-list"></div>
+    </div>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div class="main">
+    <div class="stats-row" id="stats-row" style="display:none;">
+      <div class="stat-box"><div class="stat-num green" id="st-found">0</div><div class="stat-lbl">Total Found</div></div>
+      <div class="stat-box"><div class="stat-num red" id="st-nosite">0</div><div class="stat-lbl">No Website</div></div>
+      <div class="stat-box"><div class="stat-num amber" id="st-lowrated">0</div><div class="stat-lbl">Low Rated</div></div>
+      <div class="stat-box"><div class="stat-num blue" id="st-cats">0</div><div class="stat-lbl">Categories</div></div>
+    </div>
+
+    <div class="filter-row" id="filter-row" style="display:none;">
+      <div class="filter-chip active" onclick="filterLeads('all',this)">All</div>
+      <div class="filter-chip" onclick="filterLeads('hot',this)">🔥 Hot</div>
+      <div class="filter-chip" onclick="filterLeads('nosite',this)">No Website</div>
+      <div class="filter-chip" onclick="filterLeads('lowrated',this)">Low Rated</div>
+      <div class="filter-chip" onclick="filterLeads('notcontacted',this)">Not Contacted</div>
+      <div class="filter-chip" onclick="filterLeads('nosite_norating',this)">No Site + No Rating</div>
+    </div>
+
+    <div class="sort-row" id="sort-row" style="display:none;">
+      <span class="sort-label">Sort:</span>
+      <select class="sort-select" id="sort-select" onchange="applySortAndRender()">
+        <option value="score">Score (Hottest First)</option>
+        <option value="reviews_asc">Reviews (Fewest First)</option>
+        <option value="rating_asc">Rating (Lowest First)</option>
+        <option value="name">Name A–Z</option>
+      </select>
+    </div>
+
+    <div class="results-wrap" id="results-wrap">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">◉</div>
+        <div class="empty-title">God Mode Ready</div>
+        <p class="empty-sub">Select your industries, set your radius, and hit Scan. Pulls up to 60 results per category with pagination.</p>
+        <div style="background:var(--panel);border:1px solid var(--border-std);border-radius:var(--radius);padding:1.2rem;margin-top:1rem;max-width:340px;text-align:left;">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:0.14em;margin-bottom:0.75rem;">HOT LEAD SIGNALS</div>
+          <div style="font-size:12px;color:var(--muted);line-height:2.1;">
+            → No website on Google listing (+40pts)<br/>
+            → Rating under 3.5 stars (+25pts)<br/>
+            → Fewer than 10 reviews (+15pts)<br/>
+            → No rating at all (+20pts)<br/>
+            → No phone listed (+10pts)<br/>
+            → Zero reviews (+10pts)
+          </div>
+        </div>
+      </div>
+      <div class="loading-wrap" id="loading-wrap">
+        <div class="loader-text" id="loading-text">INITIALIZING SCAN...</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+        <div class="loader-progress" id="loading-progress"></div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted);" id="loading-sub">Warming up the engine...</div>
+      </div>
+      <div id="leads-container"></div>
+    </div>
+
+    <div class="export-bar" id="export-bar" style="display:none;">
+      <div class="export-info" id="export-info">0 leads ready</div>
+      <div class="export-actions">
+        <button class="btn btn-primary" onclick="exportCSV()" style="font-size:10px;padding:6px 14px;">↓ CSV</button>
+        <button class="btn" onclick="exportHotCSV()" style="font-size:10px;padding:6px 14px;">↓ Hot Only</button>
+        <button class="btn btn-danger" onclick="clearAll()" style="font-size:10px;padding:6px 14px;">✕ Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OUTREACH MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Generate Outreach</div>
+        <div class="modal-biz" id="modal-biz-name"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sidebar-label" style="margin-bottom:0.75rem;">Message Type</div>
+      <div class="msg-type-row">
+        <div class="msg-type-btn active" onclick="setMsgType('text',this)">Text / DM</div>
+        <div class="msg-type-btn" onclick="setMsgType('email',this)">Cold Email</div>
+        <div class="msg-type-btn" onclick="setMsgType('voicemail',this)">Voicemail Script</div>
+      </div>
+      <div class="sidebar-label" style="margin-bottom:0.75rem;">Message Preview</div>
+      <div class="msg-preview" id="msg-preview"></div>
+      <div class="modal-actions">
+        <button class="copy-btn" onclick="copyMsg()">Copy Message</button>
+        <button class="dismiss-btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── STATE ───
+let allLeads = [];
+let currentFilter = 'all';
+let activeLead = null;
+let msgType = 'text';
+let contacted = new Set();
+let closed = new Set();
+let activeCats = new Set();
+let scannedCatCount = 0;
+let searchHistory = JSON.parse(localStorage.getItem('coai_history') || '[]');
+
+// ─── HISTORY ───
+function saveToHistory(meta){
+  const entry = { time: new Date().toLocaleTimeString(), leads: allLeads.length, hot: allLeads.filter(l=>l.score>=50).length, cats: scannedCatCount, location: document.getElementById('location').value };
+  searchHistory.unshift(entry);
+  if(searchHistory.length > 10) searchHistory.pop();
+  localStorage.setItem('coai_history', JSON.stringify(searchHistory));
+  renderHistory();
+}
+function renderHistory(){
+  const list = document.getElementById('history-list');
+  const section = document.getElementById('history-section');
+  if(searchHistory.length === 0){ section.style.display='none'; return; }
+  section.style.display='block';
+  list.innerHTML = searchHistory.map(h=>`
+    <div class="history-item">
+      <span class="h-time">${h.time}</span>
+      <span class="h-meta">${h.location} · ${h.cats} cats</span>
+      <span class="h-count">${h.leads} leads · ${h.hot} hot</span>
+    </div>
+  `).join('');
+}
+
+// ─── CAT COUNT UPDATE ───
+function updateCatCount(){
+  document.getElementById('cat-count').textContent = activeCats.size + ' selected';
+}
+
+// ─── TOGGLE SINGLE CAT ───
+function toggleCat(btn){
+  const cat = btn.dataset.cat;
+  if(activeCats.has(cat)){activeCats.delete(cat); btn.classList.remove('active');}
+  else{activeCats.add(cat); btn.classList.add('active');}
+  updateCatCount();
+}
+
+// ─── TOGGLE VERTICAL ───
+function toggleVertical(vertical){
+  const btns = document.querySelectorAll(`[data-vertical="${vertical}"]`);
+  const allActive = Array.from(btns).every(b => activeCats.has(b.dataset.cat));
+  btns.forEach(btn => {
+    if(allActive){activeCats.delete(btn.dataset.cat); btn.classList.remove('active');}
+    else{activeCats.add(btn.dataset.cat); btn.classList.add('active');}
+  });
+  updateCatCount();
+}
+
+// ─── SELECT ALL ───
+function selectAllCats(){
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    activeCats.add(btn.dataset.cat);
+    btn.classList.add('active');
+  });
+  updateCatCount();
+}
+
+// ─── CLEAR ALL ───
+function clearAllCats(){
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    activeCats.delete(btn.dataset.cat);
+    btn.classList.remove('active');
+  });
+  updateCatCount();
+}
+
+// ─── HOT ONLY ───
+function selectHotOnly(){
+  clearAllCats();
+  const hot = ['hvac','plumber','electrician','roofing contractor','general contractor','flooring contractor','painting contractor','fencing contractor','concrete contractor','handyman','pest control','landscaping','pool service','solar panel installation'];
+  hot.forEach(cat => {
+    activeCats.add(cat);
+    const btn = document.querySelector(`[data-cat="${cat}"]`);
+    if(btn) btn.classList.add('active');
+  });
+  updateCatCount();
+}
+
+// ─── CATEGORY SEARCH/FILTER ───
+function filterCats(query){
+  query = query.toLowerCase().trim();
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    const cat = btn.dataset.cat.toLowerCase();
+    const label = btn.textContent.toLowerCase();
+    if(!query || cat.includes(query) || label.includes(query)){
+      btn.style.display = '';
+    } else {
+      btn.style.display = 'none';
+    }
+  });
+  // Show/hide vertical groups based on visible children
+  document.querySelectorAll('.vertical-group').forEach(group => {
+    const visible = group.querySelectorAll('.cat-btn[style*="display: none"]').length < group.querySelectorAll('.cat-btn').length;
+    group.style.display = visible ? '' : 'none';
+  });
+}
+
+// ─── CORS PROXY FETCH ───
+async function gFetch(googleUrl){
+  const authKey = sessionStorage.getItem('coai_auth');
+  if(!authKey){ location.reload(); throw new Error('No auth token.'); }
+  const u = new URL(googleUrl);
+  const params = new URLSearchParams();
+  if(u.pathname.includes('geocode')){
+    params.set('mode','geocode');
+    params.set('location', u.searchParams.get('address') || '');
+  } else {
+    const [latStr, lngStr] = (u.searchParams.get('location') || '').split(',');
+    params.set('lat', latStr || '');
+    params.set('lng', lngStr || '');
+    params.set('type', u.searchParams.get('keyword') || '');
+    params.set('radius', u.searchParams.get('radius') || '8000');
+    const pt = u.searchParams.get('pagetoken');
+    if(pt) params.set('pagetoken', pt);
+  }
+  const resp = await fetch('/api/search?' + params.toString(), {
+    signal: AbortSignal.timeout(15000),
+    headers: { 'Authorization': authKey }
+  });
+  if(resp.status === 401){
+    sessionStorage.removeItem('coai_auth');
+    alert('Access Denied: Session expired or invalid token.');
+    location.reload();
+    throw new Error('Unauthorized');
+  }
+  if(!resp.ok) throw new Error('API error (status ' + resp.status + '). Check Vercel logs.');
+  return resp.json();
+}
+
+function sleep(ms){return new Promise(r => setTimeout(r, ms));}
+
+// ─── PAGINATED NEARBY SEARCH ───
+async function fetchCategoryLeads(cat, lat, lng, radius, maxResults){
+  let results = [];
+  let pageToken = null;
+  let page = 0;
+  const maxPages = maxResults <= 20 ? 1 : maxResults <= 40 ? 2 : 3;
+  do {
+    let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&keyword=${encodeURIComponent(cat)}&key=SERVER_SIDE`;
+    if(pageToken) url += `&pagetoken=${encodeURIComponent(pageToken)}`;
+    const data = await gFetch(url);
+    if(data.status === 'REQUEST_DENIED') throw new Error('Places API not enabled or key denied. Check Google Cloud Console.');
+    if(data.status === 'OVER_QUERY_LIMIT'){await sleep(2500); break;}
+    if(data.status === 'INVALID_REQUEST' && pageToken){break;}
+    if(data.results && data.results.length > 0) results = results.concat(data.results);
+    pageToken = data.next_page_token || null;
+    page++;
+    if(pageToken && page < maxPages) await sleep(2200);
+  } while(pageToken && page < maxPages && results.length < maxResults);
+  return results.slice(0, maxResults);
+}
+
+// ─── MAIN SEARCH ───
+async function runSearch(){
+  if(activeCats.size === 0){alert('Select at least one industry category.');return;}
+  const location = document.getElementById('location').value.trim() || 'Bakersfield, CA';
+  const radius = document.getElementById('radius').value;
+  const resultsCount = parseInt(document.getElementById('results-count').value);
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('leads-container').innerHTML = '';
+  document.getElementById('loading-wrap').style.display = 'flex';
+  document.getElementById('stats-row').style.display = 'none';
+  document.getElementById('filter-row').style.display = 'none';
+  document.getElementById('sort-row').style.display = 'none';
+  document.getElementById('export-bar').style.display = 'none';
+  document.getElementById('search-btn').disabled = true;
+  allLeads = [];
+  scannedCatCount = 0;
+  try{
+    document.getElementById('loading-text').textContent = 'LOCATING TARGET AREA...';
+    document.getElementById('loading-sub').textContent = 'Resolving coordinates for ' + location;
+    let lat = 35.3733, lng = -119.0187;
+    try{
+      const geo = await gFetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=SERVER_SIDE`);
+      if(geo.status === 'REQUEST_DENIED') throw new Error('KEY_DENIED');
+      if(geo.results && geo.results.length > 0){
+        lat = geo.results[0].geometry.location.lat;
+        lng = geo.results[0].geometry.location.lng;
+      }
+    }catch(geoErr){
+      if(geoErr.message === 'KEY_DENIED'){
+        document.getElementById('loading-wrap').style.display = 'none';
+        document.getElementById('empty-state').style.display = 'flex';
+        document.getElementById('search-btn').disabled = false;
+        alert('API KEY DENIED.\n\n1. Places API enabled?\n2. Geocoding API enabled?\n3. Application Restrictions → NONE\n4. API Restrictions → Don\'t restrict\n5. Wait 5 min then try again');
+        return;
+      }
+      console.warn('Geocode failed, using Bakersfield default:', geoErr.message);
+    }
+    const cats = Array.from(activeCats);
+    let processed = 0;
+    for(const cat of cats){
+      processed++;
+      document.getElementById('loading-text').textContent = `SCANNING: ${cat.toUpperCase()}`;
+      document.getElementById('loading-progress').textContent = `${processed} / ${cats.length} categories`;
+      document.getElementById('loading-sub').textContent = `${allLeads.length} leads found so far...`;
+      try{
+        const places = await fetchCategoryLeads(cat, lat, lng, radius, resultsCount);
+        places.forEach(place => {
+          if(!allLeads.find(l => l.id === place.place_id)) allLeads.push(buildLead(place, cat));
+        });
+        scannedCatCount++;
+      }catch(catErr){
+        if(catErr.message.includes('Places API') || catErr.message.includes('key denied')){throw catErr;}
+        console.warn('Category skipped:', cat, '—', catErr.message);
+      }
+      await sleep(500);
+    }
+    if(allLeads.length === 0){
+      document.getElementById('loading-wrap').style.display = 'none';
+      document.getElementById('empty-state').style.display = 'flex';
+      document.getElementById('search-btn').disabled = false;
+      alert('Zero results.\n\n• Expand radius to 25–50 miles\n• Select more categories\n• Check Places API is enabled');
+      return;
+    }
+    allLeads.sort((a,b) => b.score - a.score);
+
+    // ─── ENRICHMENT PASS: phone + website (Place Details), then email (site scrape) ───
+    const authKey = sessionStorage.getItem('coai_auth');
+    const enrichCap = Math.min(allLeads.length, 60); // cap detail calls to protect quota
+    for(let i=0; i<enrichCap; i++){
+      const lead = allLeads[i];
+      document.getElementById('loading-text').textContent = 'ENRICHING CONTACTS';
+      document.getElementById('loading-progress').textContent = `${i+1} / ${enrichCap} leads`;
+      document.getElementById('loading-sub').textContent = `Pulling phone + email for ${lead.name}...`;
+      try{
+        const d = await fetch(`/api/search?mode=details&place_id=${encodeURIComponent(lead.placeId)}`, { headers:{'Authorization':authKey} });
+        const dj = await d.json();
+        if(dj.result){
+          if(dj.result.formatted_phone_number){ lead.phone = dj.result.formatted_phone_number; lead.hasPhone = true; }
+          if(dj.result.website){ lead.website = dj.result.website; lead.hasWebsite = true; }
+        }
+      }catch(e){ /* keep going */ }
+
+      if(lead.website){
+        try{
+          const em = await fetch(`/api/search?mode=email&url=${encodeURIComponent(lead.website)}`, { headers:{'Authorization':authKey} });
+          const emj = await em.json();
+          if(emj.emails && emj.emails.length){ lead.email = emj.emails[0]; lead.allEmails = emj.emails; }
+        }catch(e){ /* no email, fine */ }
+      }
+      recomputeScore(lead); // re-score now that we know real phone/website state
+    }
+    allLeads.sort((a,b) => b.score - a.score);
+
+    renderLeads(allLeads);
+    updateStats();
+    saveToHistory();
+    document.getElementById('loading-wrap').style.display = 'none';
+    document.getElementById('stats-row').style.display = 'grid';
+    document.getElementById('filter-row').style.display = 'flex';
+    document.getElementById('sort-row').style.display = 'flex';
+    document.getElementById('export-bar').style.display = 'flex';
+    updateExportInfo();
+  }catch(err){
+    document.getElementById('loading-wrap').style.display = 'none';
+    document.getElementById('empty-state').style.display = 'flex';
+    alert('Error: ' + err.message);
+  }
+  document.getElementById('search-btn').disabled = false;
+}
+
+// ─── BUILD LEAD ───
+// Note: NearbySearch does NOT return phone/website/email. Those are filled
+// during the enrichment pass (Place Details + site scrape). buildLead sets
+// provisional state; recomputeScore() runs after enrichment with real data.
+function buildLead(place, cat){
+  const lead = {
+    id: place.place_id, name: place.name, cat,
+    address: place.vicinity || place.formatted_address || '',
+    rating: place.rating || 0, reviews: place.user_ratings_total || 0,
+    hasWebsite: false, website: '', phone: '', hasPhone: false,
+    email: '', allEmails: [],
+    score: 0, priority: 'low', signals: [], placeId: place.place_id,
+    mapsUrl: `https://www.google.com/maps/place/?q=place_id:${place.place_id}`, note: ''
+  };
+  recomputeScore(lead);
+  return lead;
+}
+
+// ─── SCORE (runs at build time AND after enrichment) ───
+function recomputeScore(lead){
+  const rating = lead.rating, reviews = lead.reviews;
+  let score = 0;
+  if(!lead.hasWebsite) score += 40;
+  if(rating > 0 && rating < 3.5) score += 25;
+  if(rating === 0) score += 20;
+  if(reviews < 10) score += 15;
+  if(!lead.hasPhone) score += 10;
+  if(reviews === 0) score += 10;
+  const signals = [];
+  if(!lead.hasWebsite) signals.push({label:'No Website', type:'bad'});
+  if(rating > 0 && rating < 3.5) signals.push({label:`${rating}★`, type:'bad'});
+  if(rating === 0) signals.push({label:'No Rating', type:'warn'});
+  if(reviews === 0) signals.push({label:'0 Reviews', type:'bad'});
+  else if(reviews < 10) signals.push({label:`${reviews} Reviews`, type:'warn'});
+  if(lead.hasPhone) signals.push({label:'☎ Phone', type:'ok'});
+  if(lead.email) signals.push({label:'✉ Email', type:'ok'});
+  if(reviews >= 10 && rating >= 4) signals.push({label:'Active Biz', type:'ok'});
+  if(reviews >= 50) signals.push({label:`${reviews} Reviews`, type:'ok'});
+  lead.score = score;
+  lead.priority = score >= 50 ? 'high' : score >= 25 ? 'med' : 'low';
+  lead.signals = signals;
+}
+
+// ─── RENDER LEADS ───
+function renderLeads(leads){
+  const container = document.getElementById('leads-container');
+  container.innerHTML = '';
+  if(leads.length === 0){
+    container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted);font-size:13px;">No leads match this filter.</div>';
+    return;
+  }
+  leads.forEach(lead => {
+    const card = document.createElement('div');
+    card.className = `lead-card priority-${lead.priority}${contacted.has(lead.id)?' contacted':''}${closed.has(lead.id)?' closed':''}`;
+    card.id = `card-${lead.id}`;
+    const scoreClass = lead.score >= 50 ? 'score-hot' : lead.score >= 25 ? 'score-warm' : 'score-cold';
+    const scoreLabel = lead.score >= 50 ? '🔥 HOT' : lead.score >= 25 ? 'WARM' : 'COLD';
+    const phoneSafe = lead.phone.replace(/'/g,"&apos;");
+    card.innerHTML = `
+      <div class="lead-top">
+        <div class="lead-name">${lead.name}</div>
+        <div class="lead-score ${scoreClass}">${scoreLabel} · ${lead.score}</div>
+      </div>
+      <div class="lead-meta">
+        <span class="lead-cat-tag">${lead.cat.toUpperCase()}</span>
+        <span class="lead-address">${lead.address}</span>
+      </div>
+      <div class="lead-signals">
+        ${lead.signals.map(s=>`<span class="signal-tag sig-${s.type}">${s.label}</span>`).join('')}
+      </div>
+      <div class="lead-actions">
+        <button class="action-btn" onclick="openMaps('${lead.mapsUrl}')">Maps</button>
+        ${lead.phone ? `<button class="action-btn" onclick="callLead('${phoneSafe}')">Call ${lead.phone}</button>` : ''}
+        ${lead.email ? `<button class="action-btn" onclick="window.location.href='mailto:${lead.email}'">✉ ${lead.email}</button>` : ''}
+        ${lead.website ? `<button class="action-btn" onclick="window.open('${lead.website}','_blank')">Website</button>` : ''}
+        <button class="action-btn" onclick="openOutreach('${lead.id}')">Outreach</button>
+        <button class="action-btn mark-contacted" onclick="markContacted('${lead.id}')">Contacted</button>
+        <button class="action-btn mark-closed" onclick="markClosed('${lead.id}')">Closed ✓</button>
+        <button class="action-btn" onclick="toggleNote('${lead.id}')">Note</button>
+      </div>
+      <div class="lead-note" id="note-${lead.id}">
+        <textarea placeholder="Add a note..." onchange="saveNote('${lead.id}',this.value)">${lead.note||''}</textarea>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// ─── SORT ───
+function applySortAndRender(){
+  const sort = document.getElementById('sort-select').value;
+  let sorted = [...allLeads];
+  if(sort === 'score') sorted.sort((a,b)=>b.score-a.score);
+  else if(sort === 'reviews_asc') sorted.sort((a,b)=>a.reviews-b.reviews);
+  else if(sort === 'rating_asc') sorted.sort((a,b)=>a.rating-b.rating);
+  else if(sort === 'name') sorted.sort((a,b)=>a.name.localeCompare(b.name));
+  renderLeads(sorted);
+}
+
+// ─── FILTER ───
+function filterLeads(filter, btn){
+  currentFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  let filtered = allLeads;
+  if(filter === 'hot') filtered = allLeads.filter(l=>l.score>=50);
+  else if(filter === 'nosite') filtered = allLeads.filter(l=>!l.hasWebsite);
+  else if(filter === 'lowrated') filtered = allLeads.filter(l=>l.rating>0&&l.rating<4);
+  else if(filter === 'notcontacted') filtered = allLeads.filter(l=>!contacted.has(l.id)&&!closed.has(l.id));
+  else if(filter === 'nosite_norating') filtered = allLeads.filter(l=>!l.hasWebsite&&l.rating===0);
+  renderLeads(filtered);
+}
+
+// ─── STATS ───
+function updateStats(){
+  const hot = allLeads.filter(l=>l.score>=50).length;
+  const nosite = allLeads.filter(l=>!l.hasWebsite).length;
+  const lowrated = allLeads.filter(l=>l.rating>0&&l.rating<4).length;
+  document.getElementById('st-found').textContent = allLeads.length;
+  document.getElementById('st-nosite').textContent = nosite;
+  document.getElementById('st-lowrated').textContent = lowrated;
+  document.getElementById('st-cats').textContent = scannedCatCount;
+  document.getElementById('s-total').textContent = allLeads.length;
+  document.getElementById('s-hot').textContent = hot;
+  document.getElementById('s-nosite2').textContent = nosite;
+}
+
+function updateExportInfo(){
+  document.getElementById('export-info').textContent = `${allLeads.length} leads · ${contacted.size} contacted · ${closed.size} closed`;
+}
+
+// ─── ACTIONS ───
+function openMaps(url){window.open(url,'_blank');}
+function callLead(phone){window.location.href='tel:'+phone.replace(/\D/g,'');}
+
+function markContacted(id){
+  contacted.add(id);
+  const card = document.getElementById('card-'+id);
+  if(card) card.classList.add('contacted');
+  document.getElementById('s-contacted').textContent = contacted.size;
+  updateExportInfo();
+}
+
+function markClosed(id){
+  closed.add(id);
+  contacted.add(id);
+  const card = document.getElementById('card-'+id);
+  if(card){card.classList.add('closed');card.classList.remove('contacted');}
+  document.getElementById('s-closed').textContent = closed.size;
+  document.getElementById('s-contacted').textContent = contacted.size;
+  updateExportInfo();
+}
+
+function toggleNote(id){
+  const note = document.getElementById('note-'+id);
+  note.style.display = note.style.display === 'block' ? 'none' : 'block';
+}
+
+function saveNote(id, val){
+  const lead = allLeads.find(l=>l.id===id);
+  if(lead) lead.note = val;
+}
+
+// ─── OUTREACH MODAL ───
+function openOutreach(id){
+  activeLead = allLeads.find(l=>l.id===id);
+  if(!activeLead) return;
+  document.getElementById('modal-biz-name').textContent = activeLead.name + ' · ' + activeLead.cat.toUpperCase();
+  setMsgType('text', document.querySelector('.msg-type-btn'));
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function setMsgType(type, btn){
+  msgType = type;
+  document.querySelectorAll('.msg-type-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('msg-preview').textContent = generateMsg(activeLead, type);
+}
+
+function generateMsg(lead, type){
+  if(!lead) return '';
+  const noSite = !lead.hasWebsite;
+  const lowRating = lead.rating > 0 && lead.rating < 3.5;
+  const noRating = lead.rating === 0;
+  const pain = noSite ? 'no website showing up on Google' : lowRating ? `a ${lead.rating}-star rating online` : noRating ? 'no reviews or ratings yet on Google' : 'a digital presence that could use some work';
+  if(type === 'text'){
+    return `Hey, I noticed ${lead.name} has ${pain}. I'm Jason with Chaotically Organized AI here in Bakersfield — we build websites and AI systems for local businesses like yours starting at $1,200, and you own everything outright. No monthly fees. Would you be open to a free 10-minute audit call? (661) 610-9198`;
+  }
+  if(type === 'email'){
+    return `Subject: Your Google listing for ${lead.name} — quick question\n\nHi there,\n\nI was searching for ${lead.cat} businesses in Bakersfield and noticed ${lead.name} has ${pain}.\n\nI'm Jason Manuel, founder of Chaotically Organized AI (chaoticallyorganizedai.com). We build sovereign websites and AI lead capture systems for local service businesses — starting at $1,200 with full ownership and zero monthly platform fees.\n\nI'd love to do a free 15-minute audit of your current online presence and show you exactly what it's costing you in missed leads.\n\nWorth a quick call?\n\n— Jason\n(661) 610-9198\nchaoticallyorganizedai.com\n1712 19th St #216, Bakersfield CA`;
+  }
+  if(type === 'voicemail'){
+    return `Hey, this is Jason Manuel calling for ${lead.name}. I run Chaotically Organized AI here in Bakersfield — we help local businesses fix their online presence so they stop losing leads to competitors. I noticed ${pain} on your Google listing and wanted to offer a free audit — takes about 15 minutes and I'll show you exactly what it's costing you. Give me a call back at 661-610-9198. That's 661-610-9198. Thanks — talk soon.`;
+  }
+  return '';
+}
+
+function copyMsg(){
+  const text = document.getElementById('msg-preview').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✓ Copied!';
+    setTimeout(()=>btn.textContent='Copy Message', 2000);
+  });
+}
+
+function closeModal(e){
+  if(!e || e.target === document.getElementById('modal-overlay')){
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+// ─── EXPORT CSV ───
+function exportCSV(){
+  if(allLeads.length === 0){alert('No leads to export.');return;}
+  const headers = ['Name','Category','Address','Phone','Email','Has Website','Website','Rating','Reviews','Score','Priority','Status','Note'];
+  const rows = allLeads.map(l=>[
+    `"${l.name.replace(/"/g,'""')}"`, `"${l.cat}"`, `"${l.address}"`, l.phone, l.email||'',
+    l.hasWebsite?'Yes':'No', l.website||'', l.rating||'', l.reviews||'', l.score, l.priority,
+    closed.has(l.id)?'Closed':contacted.has(l.id)?'Contacted':'New',
+    `"${(l.note||'').replace(/"/g,'""')}"`
+  ]);
+  downloadCSV([headers,...rows], `coai-leads-${new Date().toISOString().slice(0,10)}.csv`);
+}
+
+function exportHotCSV(){
+  const hot = allLeads.filter(l=>l.score>=50);
+  if(hot.length === 0){alert('No hot leads to export.');return;}
+  const headers = ['Name','Category','Address','Phone','Email','Has Website','Rating','Reviews','Score'];
+  const rows = hot.map(l=>[
+    `"${l.name.replace(/"/g,'""')}"`, `"${l.cat}"`, `"${l.address}"`, l.phone, l.email||'',
+    l.hasWebsite?'Yes':'No', l.rating||'', l.reviews||'', l.score
+  ]);
+  downloadCSV([headers,...rows], `coai-HOT-leads-${new Date().toISOString().slice(0,10)}.csv`);
+}
+
+function downloadCSV(data, filename){
+  const csv = data.map(r=>r.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function clearAll(){
+  if(!confirm('Clear all leads? Cannot be undone.')) return;
+  allLeads = []; contacted.clear(); closed.clear();
+  document.getElementById('leads-container').innerHTML = '';
+  document.getElementById('empty-state').style.display = 'flex';
+  document.getElementById('stats-row').style.display = 'none';
+  document.getElementById('filter-row').style.display = 'none';
+  document.getElementById('sort-row').style.display = 'none';
+  document.getElementById('export-bar').style.display = 'none';
+  updateStats();
+}
+
+// ─── AUTH GATE ───
+function unlockEngine(){
+  const key = document.getElementById('access-key').value.trim();
+  if(!key) return;
+  fetch('/api/search?mode=ping', { headers: { 'Authorization': key } })
+    .then(r => {
+      if(r.ok){
+        sessionStorage.setItem('coai_auth', key);
+        document.getElementById('login-overlay').style.display = 'none';
+        renderHistory();
+      } else {
+        const err = document.getElementById('login-error');
+        err.textContent = r.status === 401 ? 'Invalid key. Try again.' : 'Engine error (' + r.status + '). Check Vercel env vars.';
+        err.style.display = 'block';
+        document.getElementById('access-key').value = '';
+        document.getElementById('access-key').focus();
+      }
+    })
+    .catch(() => {
+      // FAIL CLOSED: network failure does not open the gate.
+      const err = document.getElementById('login-error');
+      err.textContent = 'Network error. Check connection and retry.';
+      err.style.display = 'block';
+    });
+}
+
+(function(){
+  const existing = sessionStorage.getItem('coai_auth');
+  if(existing){
+    document.getElementById('login-overlay').style.display = 'none';
+    renderHistory();
+  }
+})();
+</script>
+</body>
+</html>

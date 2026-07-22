@@ -1,0 +1,10 @@
+{
+  "name": "trade-fortress",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix apps/command-center install && npm --prefix services/coai-lead-engine install && npm --prefix services/grant-command install",
+    "dev": "npm --prefix apps/command-center run dev",
+    "build": "npm --prefix apps/command-center run build",
+    "check": "npm --prefix apps/command-center run build"
+  }
+}
