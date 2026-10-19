@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
   // Best-effort notifications — never blocks account creation.
   const notifyTo = process.env.SIGNUP_NOTIFY_EMAIL || process.env.SALES_NOTIFY_EMAIL
   if (notifyTo) {
-    void sendEmail({
+    await sendEmail({
       to: notifyTo,
       subject: `New Trade Fortress trial: ${businessName}`,
       replyTo: email,
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
     })
   }
 
-  void sendEmail({
+  await sendEmail({
     to: email,
     subject: 'Your Trade Fortress trial is ready',
     html: `

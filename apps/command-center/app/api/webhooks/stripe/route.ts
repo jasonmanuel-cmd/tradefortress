@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
   const type = event.type ?? ''
 
   try {
-    if (type === 'checkout.session.completed' || type === 'customer.subscription.updated') {
+    if (type === 'checkout.session.completed') {
       const metadata = (object.metadata ?? {}) as Record<string, unknown>
       const clientId =
         asString(object.client_reference_id) ??
@@ -75,18 +75,41 @@ export async function POST(request: NextRequest) {
 
       if (clientId) {
         const plan = normalizePlanKey(asString(metadata.plan) ?? asString(object.plan_tier))
-        const fee = PLAN_MAP[plan].monthly
         await supabase
           .from('clients')
           .update({
             status: 'active',
             plan_tier: plan,
-            monthly_fee: fee,
-            payment_status: 'paid',
+            monthly_fee: PLAN_MAP[plan].monthly,
+            payment_status: object.payment_status === 'unpaid' ? 'unpaid' : 'paid',
             stripe_customer_id: asString(object.customer),
-            stripe_subscription_id: asString(object.subscription) ?? asString(object.id),
+            stripe_subscription_id: asString(object.subscription),
           })
           .eq('id', clientId)
+      }
+    }
+
+    if (type === 'customer.subscription.updated') {
+      const metadata = (object.metadata ?? {}) as Record<string, unknown>
+      const clientId =
+        asString(metadata.client_id) ?? (await clientIdForCustomer(supabase, asString(object.customer)))
+      const subscriptionStatus = asString(object.status)
+
+      if (clientId) {
+        const updates: Record<string, unknown> = {}
+        if (metadata.plan) updates.plan_tier = normalizePlanKey(asString(metadata.plan))
+        if (subscriptionStatus === 'active' || subscriptionStatus === 'trialing') {
+          updates.status = 'active'
+          updates.payment_status = 'paid'
+        } else if (subscriptionStatus === 'past_due' || subscriptionStatus === 'unpaid') {
+          updates.payment_status = 'overdue'
+        } else if (subscriptionStatus === 'canceled') {
+          updates.payment_status = 'unpaid'
+          updates.stripe_subscription_id = null
+        }
+        if (Object.keys(updates).length > 0) {
+          await supabase.from('clients').update(updates).eq('id', clientId)
+        }
       }
     }
 
@@ -135,6 +158,10 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Stripe webhook handling failed:', error)
+    // Remove the idempotency marker so Stripe's retry is processed.
+    if (event.id) {
+      await supabase.from('billing_events').delete().eq('event_id', event.id)
+    }
     // Returning 500 asks Stripe to retry.
     return NextResponse.json({ error: 'Webhook handler failed.' }, { status: 500 })
   }
