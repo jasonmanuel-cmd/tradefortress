@@ -38,6 +38,7 @@ finished before a paid launch.
 | Security headers | `nosniff`, referrer policy, permissions policy, and a `frame-ancestors` CSP on every route; HSTS in production |
 | Cached private data | Session-dependent API responses send `Cache-Control: no-store` |
 | Operability | `GET /api/health` reports integration configuration without leaking secrets; `app/error.tsx`, `app/global-error.tsx`, and a branded 404 added |
+| Dependencies | Next.js 16.4.2 and React 19.3; the stale `postcss`/`sharp` overrides that forced vulnerable versions were removed. `npm audit --omit=dev` now reports **0 vulnerabilities** (was 6, including one critical) |
 | CI | `.github/workflows/ci.yml` runs typecheck, production build, and smoke tests on every PR |
 
 ### Removed or corrected
@@ -92,6 +93,7 @@ These cannot be completed from code alone. Each one is a **blocker** for chargin
 | Single admin role | No support/read-only staff role | Add roles and an audit log of admin actions |
 | Trial signup does not provision a phone number | Sales/onboarding must do it | Add Telnyx number search/purchase to the admin panel |
 | Logo asset is a JPG crop | Scales poorly and has a visible edge on retina | Supply SVG/PNG mark and favicon set |
+| Tailwind 3 dev-dependency advisories | `npm audit` (including dev) reports 7 issues in the CSS toolchain; they are build-time only and not shipped to production | Plan the Tailwind 4 upgrade and re-run the audit |
 
 ---
 
