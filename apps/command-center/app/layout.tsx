@@ -1,43 +1,68 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { Analytics } from '@vercel/analytics/next'
+import { SITE_NAME, SITE_URL, SUPPORT_EMAIL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: {
     default: 'Trade Fortress | Command Center for Trade Businesses',
     template: '%s | Trade Fortress',
   },
-  description: 'Protect leads, manage jobs and paperwork, and prepare for commercial work from one command center built for trade-service businesses.',
-  metadataBase: new URL('https://leadshield.live'),
-  alternates: {
-    canonical: '/',
-  },
+  description:
+    'Protect leads, manage jobs and paperwork, and prepare for commercial work from one command center built for trade-service businesses.',
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  authors: [{ name: 'Chaotically Organized AI' }],
+  creator: 'Chaotically Organized AI',
+  publisher: 'Chaotically Organized AI',
   icons: {
-    icon: '/trade-fortress-logo.jpg',
+    icon: [{ url: '/trade-fortress-logo.jpg', type: 'image/jpeg' }],
+    apple: [{ url: '/trade-fortress-logo.jpg' }],
   },
   openGraph: {
     title: 'Trade Fortress | Command Center for Trade Businesses',
-    description: 'Protect leads, manage jobs and paperwork, and prepare for commercial work from one trade-business command center.',
-    url: 'https://leadshield.live',
-    siteName: 'Trade Fortress',
+    description:
+      'Protect leads, manage jobs and paperwork, and prepare for commercial work from one trade-business command center.',
+    url: SITE_URL,
+    siteName: SITE_NAME,
     type: 'website',
     locale: 'en_US',
-    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Trade Fortress command center for trade businesses' }],
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Trade Fortress command center for trade businesses',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Trade Fortress | Command Center for Trade Businesses',
-    description: 'Protect leads, manage jobs and paperwork, and prepare for commercial work in one command center.',
+    description:
+      'Protect leads, manage jobs and paperwork, and prepare for commercial work in one command center.',
     images: ['/opengraph-image'],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
   },
-  keywords: ['trade business software', 'contractor CRM', 'missed call text back', 'contractor lead management', 'job pipeline', 'commercial credential packets'],
+  keywords: [
+    'trade business software',
+    'contractor CRM',
+    'missed call text back',
+    'contractor lead management',
+    'job pipeline',
+    'commercial credential packets',
+    'field service software',
+  ],
+  other: {
+    'support-email': SUPPORT_EMAIL,
+  },
 }
 
-export const viewport = {
+export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: '#F7F3E8',

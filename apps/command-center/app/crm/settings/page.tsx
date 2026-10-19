@@ -120,6 +120,25 @@ export default function CrmSettings() {
           </p>
         </div>
 
+        {/* Plan & billing */}
+        <div style={{ ...PANEL, marginBottom: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+            <div>
+              <h2 style={{ margin: '0 0 6px', fontSize: '15px', fontWeight: 600, color: COLORS.cyan }}>Plan &amp; Billing</h2>
+              <p style={{ margin: 0, fontSize: '13px', color: COLORS.muted }}>
+                {bizName || 'Your business'} · upgrade, change plans, or update your payment method.
+              </p>
+            </div>
+            <a href="/crm/billing" style={{
+              borderRadius: '10px', padding: '10px 16px', fontSize: '13px', fontWeight: 700,
+              background: 'rgba(0,229,255,0.12)', color: COLORS.cyan,
+              border: '1px solid rgba(0,229,255,0.3)', textDecoration: 'none', whiteSpace: 'nowrap',
+            }}>
+              Manage plan →
+            </a>
+          </div>
+        </div>
+
         {/* SMS Template */}
         <div style={{ ...PANEL, marginBottom: '16px' }}>
           <h2 style={{ margin: '0 0 16px', fontSize: '15px', fontWeight: 600, color: COLORS.cyan }}>Auto-Reply SMS Template</h2>

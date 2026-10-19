@@ -21,7 +21,15 @@ export async function isAdminSession() {
   const sessionClient = createServerClient(url, anonKey, {
     cookies: {
       getAll: () => store.getAll(),
-      setAll: (items) => items.forEach(({ name, value, options }) => store.set(name, value, options)),
+      // Called from a Server Component, where cookies are read-only. Token
+      // refreshes are handled by proxy.ts, so a failure here is non-fatal.
+      setAll: (items) => {
+        try {
+          items.forEach(({ name, value, options }) => store.set(name, value, options))
+        } catch {
+          /* read-only cookie store */
+        }
+      },
     },
   })
   const { data: { user } } = await sessionClient.auth.getUser()

@@ -1,6 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 import { isAdminSession } from '@/lib/supabase-admin'
+import { PLAN_KEYS, PLAN_MAP, normalizePlanKey } from '@/lib/plans'
+import { cleanText, isEmail, isStrongEnoughPassword, oneOf } from '@/lib/validation'
+
+const CLIENT_STATUSES = ['active', 'suspended', 'trialing'] as const
+const PAYMENT_STATUSES = ['paid', 'unpaid', 'overdue'] as const
 
 function unauthorized() {
   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -69,26 +74,58 @@ export async function PATCH(req: NextRequest) {
 
   const { id, status, plan_tier, monthly_fee, payment_status } = body as Record<string, string | undefined>
 
-  if (!id) {
+  if (!id || typeof id !== 'string') {
     return NextResponse.json({ error: 'Client id required' }, { status: 400 })
   }
 
   const updates: Record<string, unknown> = {}
-  if (status) updates.status = status
-  if (plan_tier) updates.plan_tier = plan_tier
-  if (monthly_fee) updates.monthly_fee = parseFloat(monthly_fee)
-  if (payment_status) updates.payment_status = payment_status
+
+  if (status !== undefined) {
+    const nextStatus = oneOf(status, CLIENT_STATUSES)
+    if (!nextStatus) return NextResponse.json({ error: 'Invalid account status' }, { status: 422 })
+    updates.status = nextStatus
+  }
+
+  if (plan_tier !== undefined) {
+    const nextPlan = oneOf(plan_tier, PLAN_KEYS)
+    if (!nextPlan) return NextResponse.json({ error: 'Invalid plan' }, { status: 422 })
+    updates.plan_tier = nextPlan
+    // Keep the stored fee aligned with the catalogue unless a custom fee is sent.
+    if (monthly_fee === undefined) updates.monthly_fee = PLAN_MAP[nextPlan].monthly
+  }
+
+  if (monthly_fee !== undefined) {
+    const fee = Number.parseFloat(monthly_fee)
+    if (!Number.isFinite(fee) || fee < 0 || fee > 100_000) {
+      return NextResponse.json({ error: 'Monthly fee must be between 0 and 100000' }, { status: 422 })
+    }
+    updates.monthly_fee = Math.round(fee * 100) / 100
+  }
+
+  if (payment_status !== undefined) {
+    const nextPayment = oneOf(payment_status, PAYMENT_STATUSES)
+    if (!nextPayment) return NextResponse.json({ error: 'Invalid payment status' }, { status: 422 })
+    updates.payment_status = nextPayment
+  }
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: 'No fields to update' }, { status: 400 })
   }
 
-  const { error } = await supabase.from('clients').update(updates).eq('id', id)
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
+  const { data, error } = await supabase
+    .from('clients')
+    .update(updates)
+    .eq('id', id)
+    .select('id, status, plan_tier, monthly_fee, payment_status')
+    .maybeSingle()
 
-  return NextResponse.json({ ok: true })
+  if (error) {
+    console.error('Client update failed:', error.message)
+    return NextResponse.json({ error: 'Could not update the client.' }, { status: 500 })
+  }
+  if (!data) return NextResponse.json({ error: 'Client not found' }, { status: 404 })
+
+  return NextResponse.json({ ok: true, client: { ...data, plan_tier: normalizePlanKey(data.plan_tier) } })
 }
 
 export async function POST(req: NextRequest) {
@@ -116,19 +153,22 @@ export async function POST(req: NextRequest) {
     sms_template,
   } = body as Record<string, string | undefined>
 
-  if (!business_name || !email || !password) {
+  const cleanBusinessName = cleanText(business_name, 120)
+  const cleanEmail = isEmail(email) ? email.trim().toLowerCase() : ''
+
+  if (!cleanBusinessName || !cleanEmail || !isStrongEnoughPassword(password)) {
     return NextResponse.json(
-      { error: 'business_name, email, and password are required' },
-      { status: 400 }
+      { error: 'Business name, a valid email, and a password of at least 10 characters are required.' },
+      { status: 422 }
     )
   }
 
   // 1. Create Supabase Auth user
   const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
-    email,
+    email: cleanEmail,
     password,
     email_confirm: true,
-    user_metadata: { business_name, owner_name: owner_name ?? null },
+    user_metadata: { business_name: cleanBusinessName, owner_name: owner_name ?? null },
   })
 
   if (authError) {
@@ -142,9 +182,9 @@ export async function POST(req: NextRequest) {
     .from('clients')
     .insert({
       id: userId,
-      business_name,
+      business_name: cleanBusinessName,
       owner_name: owner_name ?? null,
-      email,
+      email: cleanEmail,
       status: 'active',
     })
     .select()

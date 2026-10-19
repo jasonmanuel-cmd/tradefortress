@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { DemoForm, RevenueCalculator } from '@/components/LandingInteractive'
+import { SITE_URL } from '@/lib/site'
+import { PLANS, TRIAL_DAYS } from '@/lib/plans'
 
 const C = {
   bg: '#F7F3E8',
@@ -86,9 +88,9 @@ const STRUCTURED_DATA = {
   '@graph': [
     {
       '@type': 'SoftwareApplication',
-      '@id': 'https://leadshield.live/#software',
+      '@id': `${SITE_URL}/#software`,
       name: 'Trade Fortress',
-      url: 'https://leadshield.live/',
+      url: `${SITE_URL}/`,
       applicationCategory: 'BusinessApplication',
       operatingSystem: 'Web',
       description: 'A command center for trade-service businesses to protect leads, manage jobs and paperwork, and prepare for commercial work.',
@@ -99,12 +101,12 @@ const STRUCTURED_DATA = {
       creator: {
         '@type': 'Organization',
         name: 'Chaotically Organized AI',
-        url: 'https://leadshield.live/',
+        url: SITE_URL,
       },
     },
     {
       '@type': 'FAQPage',
-      '@id': 'https://leadshield.live/#faq',
+      '@id': `${SITE_URL}/#faq`,
       mainEntity: FAQS.map((faq) => ({
         '@type': 'Question',
         name: faq.q,
@@ -187,9 +189,13 @@ export default function HomePage() {
           <a href="#trades">Who it serves</a>
           <a href="#system">System</a>
           <a href="#workflow">How it works</a>
+          <Link href="/pricing">Pricing</Link>
           <a href="#demo">Demo</a>
         </div>
-        <Link href="/signon" className="rounded-xl px-4 py-3 text-sm font-black" style={{ background: C.blue, color: '#FFFFFF' }}>Client Sign In</Link>
+        <div className="flex items-center gap-2">
+          <Link href="/signon" className="hidden rounded-xl px-3 py-3 text-sm font-black sm:block" style={{ color: C.ink }}>Sign in</Link>
+          <Link href="/start-trial" className="rounded-xl px-4 py-3 text-sm font-black" style={{ background: C.blue, color: '#FFFFFF' }}>Start free trial</Link>
+        </div>
       </nav>
 
       <main id="main-content" tabIndex={-1}>
@@ -207,13 +213,14 @@ export default function HomePage() {
             Keep missed calls, leads, jobs, field notes, estimates, credentials, and follow-up connected—without forcing your crew to learn a complicated corporate CRM.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="#calculator" className="rounded-xl px-8 py-4 text-center text-base font-black" style={{ background: `linear-gradient(135deg,${C.cyan},${C.blue})`, color: C.bg }}>
+            <Link href="/start-trial" className="rounded-xl px-8 py-4 text-center text-base font-black" style={{ background: `linear-gradient(135deg,${C.cyan},${C.blue})`, color: C.bg }}>
+              Start {TRIAL_DAYS}-day free trial
+            </Link>
+            <Link href="#calculator" className="rounded-xl px-8 py-4 text-center text-base font-black" style={{ border: `1px solid ${C.border}`, color: C.ink }}>
               See what missed calls cost
             </Link>
-            <Link href="#demo" className="rounded-xl px-8 py-4 text-center text-base font-black" style={{ border: `1px solid ${C.border}`, color: C.ink }}>
-              Send test auto-reply
-            </Link>
           </div>
+          <p className="mt-3 text-xs font-bold" style={{ color: C.quiet }}>No credit card · Setup included · Cancel any time</p>
           <div className="mt-8 grid grid-cols-3 gap-3">
             {[
               ['Fast', 'instant response'],
@@ -376,6 +383,38 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section id="pricing" className="px-6 py-16 md:px-16" style={{ background: '#FFFFFF', borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <div className="max-w-2xl">
+              <p className="mb-3 text-xs font-black uppercase tracking-[0.22em]" style={{ color: C.green }}>Simple pricing</p>
+              <h2 className="font-display text-4xl font-bold md:text-5xl" style={{ color: C.ink }}>Pick the plan that matches your crew.</h2>
+              <p className="mt-4 text-base leading-relaxed" style={{ color: C.muted }}>Every plan includes setup, your tracking number, and a real person to call. Start free for {TRIAL_DAYS} days.</p>
+            </div>
+            <Link href="/pricing" className="rounded-xl px-5 py-3 text-sm font-black" style={{ border: `1px solid ${C.border}`, color: C.ink }}>Compare all plans →</Link>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {PLANS.map((plan) => (
+              <article key={plan.key} className="flex flex-col rounded-[26px] p-6" style={{ background: plan.popular ? '#F3F8FC' : C.bg, border: plan.popular ? '2px solid #173F6B' : `1px solid ${C.border}` }}>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-2xl font-black" style={{ color: C.ink }}>{plan.name}</h3>
+                  {plan.popular && <span className="rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em]" style={{ background: C.blue, color: '#FFFFFF' }}>Popular</span>}
+                </div>
+                <p className="mt-1 text-sm" style={{ color: C.muted }}>{plan.tagline}</p>
+                <p className="mt-4 font-display text-4xl font-black" style={{ color: C.ink }}>${plan.monthly}<span className="text-sm font-bold" style={{ color: C.quiet }}>/mo</span></p>
+                <p className="mt-1 text-xs font-bold" style={{ color: C.quiet }}>{plan.seats} · {plan.trackingNumbers}</p>
+                <ul className="mt-4 grid flex-1 gap-2">
+                  {plan.features.slice(0, 4).map((feature) => (
+                    <li key={feature} className="text-sm leading-relaxed" style={{ color: '#374E63' }}>✓ {feature}</li>
+                  ))}
+                </ul>
+                <Link href={`/start-trial?plan=${plan.key}`} className="mt-5 rounded-xl px-5 py-3 text-center text-sm font-black" style={{ background: plan.popular ? C.blue : '#EEF5FA', color: plan.popular ? '#FFFFFF' : C.blue, border: plan.popular ? 'none' : `1px solid ${C.border}` }}>Start free trial</Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="faq" className="mx-auto max-w-4xl px-6 py-16 md:px-16">
         <div className="mb-8 text-center">
           <p className="mb-3 text-xs font-black uppercase tracking-[0.22em]" style={{ color: C.gold }}>FAQ</p>
@@ -402,10 +441,12 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex flex-wrap gap-5 text-sm" style={{ color: C.muted }}>
+            <Link href="/pricing">Pricing</Link>
+            <Link href="/start-trial">Start free trial</Link>
             <Link href="/privacy">Privacy</Link>
-            <Link href="/signon">Sign In</Link>
-            <Link href="/crm">CRM</Link>
-            <Link href="/crm/credentials">Credentials</Link>
+            <Link href="/terms">Terms</Link>
+            <Link href="/sms-policy">SMS policy</Link>
+            <Link href="/signon">Sign in</Link>
           </div>
         </div>
       </footer>

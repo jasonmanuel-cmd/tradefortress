@@ -1,260 +1,206 @@
-export default function PrivacyPolicy() {
+import type { Metadata } from 'next'
+import LegalPage from '@/components/LegalPage'
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description:
+    'How Trade Fortress collects, uses, stores, and protects business and lead data, including the choices available to account holders and their customers.',
+  alternates: { canonical: '/privacy' },
+}
+
+const EFFECTIVE = 'October 19, 2026'
+
+const RETENTION = [
+  ['Lead records (calls, contact info, pipeline status)', 'Supabase (US)', 'Until the account is closed, then purged within 90 days'],
+  ['Account settings and SMS templates', 'Supabase (US)', 'Until changed or the account is closed'],
+  ['SMS delivery logs', 'Supabase (US)', 'Stored with the related lead record'],
+  ['Billing records', 'Stripe + Supabase', 'Seven years where required for tax and accounting'],
+  ['Web and performance logs', 'Vercel', 'Per Vercel retention settings'],
+  ['Call and message routing metadata', 'Telnyx', 'Per Telnyx retention policy'],
+]
+
+export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-200 py-16 px-4">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-2">LeadShield Privacy Policy</h1>
-        <p className="text-gray-400 mb-8">
-          Effective Date: June 10, 2026 · Last Updated: June 10, 2026
-          <br />
-          Service: LeadShield CRM & Missed Call System · Provider: Chaotically Organized AI
-          <br />
-          Contact:{" "}
-          <a href="mailto:privacy@coaibakersfield.com" className="text-purple-400 underline">
-            privacy@coaibakersfield.com
-          </a>
+    <LegalPage
+      title="Privacy Policy"
+      updated={EFFECTIVE}
+      summary="We do not sell personal information, we do not share it for advertising, and each business account is isolated from every other account. This page explains exactly what we collect and why."
+    >
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>1. Who we are</h2>
+        <p className="mt-2">
+          Trade Fortress is a product of Chaotically Organized AI, a California business based in
+          Bakersfield. We provide a web-based command center for trade-service businesses, including
+          missed-call text-back, lead tracking, job records, and document organization. This policy
+          covers our website, the command center, and the messaging program.
         </p>
+      </section>
 
-        <div className="rounded-xl p-5 mb-10 border-2 border-purple-700/40"
-          style={{ background: 'rgba(168,85,247,0.06)' }}>
-          <p className="font-bold text-white text-lg mb-2">Our Commitment to Your Privacy</p>
-          <ul className="space-y-2 text-sm leading-relaxed text-gray-300">
-            <li><strong className="text-purple-300">We do not sell your personal data.</strong> Period.</li>
-            <li><strong className="text-purple-300">We do not share your data for advertising or marketing purposes.</strong></li>
-            <li>Client phone numbers and lead data are stored in encrypted databases with row-level security — each client can only see their own data.</li>
-            <li>We collect only the minimum data required to deliver the missed-call detection, auto-reply SMS, and CRM dashboard features.</li>
-          </ul>
-        </div>
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>2. Information we collect</h2>
+        <ul className="mt-2 grid gap-2 pl-5" style={{ listStyleType: 'disc' }}>
+          <li>
+            <strong>Account information:</strong> business name, owner name, email address, password
+            (hashed by our auth provider), phone numbers, trade category, and plan.
+          </li>
+          <li>
+            <strong>Lead and call data:</strong> the caller&apos;s phone number, the tracking number
+            they called, call time, whether the call was missed, call status, notes your team adds,
+            and pipeline status.
+          </li>
+          <li>
+            <strong>Message content:</strong> the SMS templates you configure and the delivery status
+            of messages sent to callers. We do not record call audio.
+          </li>
+          <li>
+            <strong>Job and document records:</strong> customers, jobs, permits, proposals, material
+            lists, and credential details you enter.
+          </li>
+          <li>
+            <strong>Billing data:</strong> plan, subscription status, and payment history. Card details
+            are handled by Stripe and never touch our servers.
+          </li>
+          <li>
+            <strong>Technical data:</strong> IP address used for rate limiting and security, browser
+            type, and aggregated, anonymized page analytics.
+          </li>
+        </ul>
+      </section>
 
-        <Section title="1. Data We Collect and Why">
-          <SubSection title="1.1 Call Metadata">
-            <strong>What we collect:</strong> Incoming caller phone number, called number (your tracking number), timestamp of the call, and call disposition (missed, answered).
-            <br /><br />
-            <strong>Why:</strong> This is required to detect missed calls, log leads in the CRM, and trigger the auto-reply SMS to the caller.
-            <br /><br />
-            <strong>Storage:</strong> Stored in encrypted Supabase Postgres database with row-level security. Retained as part of your lead history.
-          </SubSection>
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>3. How we use information</h2>
+        <ul className="mt-2 grid gap-2 pl-5" style={{ listStyleType: 'disc' }}>
+          <li>Detect a missed call, log the lead, and send the text reply your business configured.</li>
+          <li>Display leads, jobs, and documents in your command center and isolate your account.</li>
+          <li>Authenticate users, prevent abuse, and enforce rate limits.</li>
+          <li>Process subscription payments and provide support.</li>
+          <li>Send service notices such as trial reminders, billing receipts, and security alerts.</li>
+          <li>Improve reliability and understand aggregate product usage.</li>
+        </ul>
+        <p className="mt-2">
+          We do not use lead data to advertise to your customers, and we do not send marketing emails
+          to people who contacted your business.
+        </p>
+      </section>
 
-          <SubSection title="1.2 SMS Content">
-            <strong>What we collect:</strong> The auto-reply SMS message content (configured by you) and confirmation that the message was sent.
-            <br /><br />
-            <strong>Why:</strong> To send the automated reply to your missed callers and log the communication in your CRM history.
-            <br /><br />
-            <strong>Storage:</strong> Message templates are stored in your account settings. Delivery logs are stored as part of the lead record.
-          </SubSection>
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>4. Legal bases and consent</h2>
+        <p className="mt-2">
+          Where required, we process data to perform our contract with your business, to comply with
+          law, to protect legitimate interests in operating a secure service, and with consent where
+          consent is the appropriate basis. Text message consent is described in the{' '}
+          <a href="/sms-policy" className="font-bold underline" style={{ color: '#173F6B' }}>SMS &amp; Consent Policy</a>.
+        </p>
+      </section>
 
-          <SubSection title="1.3 Account Information">
-            <strong>What we collect:</strong> Business name, email address, account password (hashed), and telephony configuration (tracking phone number, forwarding number).
-            <br /><br />
-            <strong>Why:</strong> Required to create and manage your account, authenticate you to the CRM dashboard, and route calls correctly.
-          </SubSection>
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>5. Sharing and service providers</h2>
+        <p className="mt-2">
+          We share data only with providers that help us operate the service, and only as needed:
+        </p>
+        <ul className="mt-2 grid gap-2 pl-5" style={{ listStyleType: 'disc' }}>
+          <li><strong>Supabase</strong> — encrypted Postgres database and authentication (hosted in the United States).</li>
+          <li><strong>Telnyx</strong> — call routing and SMS delivery.</li>
+          <li><strong>Vercel</strong> — application hosting and anonymous performance analytics.</li>
+          <li><strong>Stripe</strong> — subscription billing and payment processing.</li>
+          <li><strong>Resend</strong> — transactional email delivery.</li>
+          <li><strong>Legal requirements</strong> — we may disclose information when required by law, subpoena, or a valid governmental request.</li>
+        </ul>
+        <p className="mt-2">
+          We do not sell personal information, we do not share it for cross-context behavioral
+          advertising, and we do not share mobile numbers or messaging consent with third parties or
+          affiliates for their own marketing.
+        </p>
+      </section>
 
-          <SubSection title="1.4 CRM Lead Data">
-            <strong>What we collect:</strong> Lead contact name, notes, status changes, callback timestamps, and any custom fields you fill in.
-            <br /><br />
-            <strong>Why:</strong> To provide the CRM pipeline management features you explicitly use.
-          </SubSection>
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>6. Security</h2>
+        <p className="mt-2">
+          Data is encrypted in transit with TLS. Database access is protected by row-level security,
+          and server routes use a service key that never reaches the browser. Passwords are hashed by
+          our auth provider. Access to production systems is limited to authorized operators. No
+          system is perfectly secure, so we also rely on short-lived sessions, rate limits, and
+          monitoring.
+        </p>
+      </section>
 
-          <SubSection title="1.5 Website Usage Data">
-            <strong>What we collect:</strong> Standard web server logs (IP address, browser type, pages accessed) and anonymized analytics via Vercel Analytics.
-            <br /><br />
-            <strong>Why:</strong> For site operation, performance monitoring, and improving the user experience. This data is anonymized and not linked to your personal identity.
-          </SubSection>
-        </Section>
-
-        <Section title="2. How We Use Your Data">
-          <SubSection title="2.1 Missed Call Detection & Auto-Reply">
-            When a call to your tracking number goes unanswered, our system detects the missed call, looks up your SMS template, and sends an automated reply to the caller. This is the core function of the service.
-          </SubSection>
-
-          <SubSection title="2.2 CRM Dashboard">
-            All missed calls are logged as leads in your CRM dashboard. You can update lead statuses, add notes, and manage your pipeline from the web interface at leadshield.live.
-          </SubSection>
-
-          <SubSection title="2.3 Account Management">
-            Your email and business information are used to authenticate you, communicate service updates, and process account-related requests.
-          </SubSection>
-        </Section>
-
-        <Section title="3. Data We Do NOT Collect">
-          <ul className="list-disc list-inside space-y-1 text-gray-300">
-            <li>We do not record call audio or listen to conversations</li>
-            <li>We do not access your device microphone, camera, or file system</li>
-            <li>We do not track your activity across other websites or apps</li>
-            <li>We do not use advertising SDKs or ad identifiers</li>
-            <li>We do not collect any data from children</li>
-            <li>We do not sell or share your personal data with third parties for any commercial purpose</li>
-          </ul>
-        </Section>
-
-        <Section title="4. Data Sharing">
-          <p className="mb-3 font-medium text-white">We do not sell your data.</p>
-          <p className="mb-3">LeadShield does not rent, sell, or share your personal information with third parties for their own marketing or advertising purposes.</p>
-          <ul className="list-disc list-inside space-y-1 text-gray-300">
-            <li><strong>Telnyx (telephony provider):</strong> Call metadata (caller number, called number) is transmitted to Telnyx to route calls and deliver SMS messages. This is required for the core service to function.</li>
-            <li><strong>Supabase (database provider):</strong> All persistent data is stored in Supabase Postgres, hosted on AWS. Row-level security ensures data isolation between clients.</li>
-            <li><strong>Vercel (hosting provider):</strong> The CRM dashboard and website are hosted on Vercel. Standard web server logs are collected per Vercel&apos;s policies.</li>
-            <li><strong>Resend (email provider):</strong> If email notifications are enabled, your email address and notification content are processed by Resend for delivery.</li>
-            <li><strong>Legal compliance:</strong> We may disclose information if required by law, court order, or governmental regulation.</li>
-          </ul>
-        </Section>
-
-        <Section title="5. Data Storage & Security">
-          <SubSection title="5.1 Database Storage">
-            All data is stored in an encrypted Supabase Postgres database. Row-level security (RLS) restricts access so that each client can only see their own data. Connections are encrypted via TLS 1.3.
-          </SubSection>
-
-          <SubSection title="5.2 Passwords">
-            Account passwords are hashed using bcrypt and stored in Supabase Auth. We never store or transmit plain-text passwords.
-          </SubSection>
-
-          <SubSection title="5.3 Data Isolation">
-            Each client account is fully isolated. No client can access another client&apos;s leads, settings, or configuration. Admin access is restricted via a separate authentication token.
-          </SubSection>
-        </Section>
-
-        <Section title="6. Data Retention & Deletion">
-          <table className="w-full text-sm border-collapse mt-2">
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>7. Retention and deletion</h2>
+        <p className="mt-2">We keep data only as long as it is needed for the purposes above.</p>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full min-w-[560px] border-collapse text-sm">
             <thead>
-              <tr className="border-b border-gray-700">
-                <th className="text-left py-2 pr-4 text-gray-400">Data Type</th>
-                <th className="text-left py-2 pr-4 text-gray-400">Storage Location</th>
-                <th className="text-left py-2 text-gray-400">Retention Period</th>
+              <tr style={{ color: '#596B7D' }}>
+                <th className="py-2 pr-3 text-left font-bold">Data type</th>
+                <th className="py-2 pr-3 text-left font-bold">Stored with</th>
+                <th className="py-2 text-left font-bold">Retention</th>
               </tr>
             </thead>
-            <tbody className="text-gray-300">
-              <tr className="border-b border-gray-800">
-                <td className="py-2 pr-4">Lead records (call logs + CRM data)</td>
-                <td className="py-2 pr-4">Supabase</td>
-                <td className="py-2">Until account is terminated; auto-purged 90 days after account deletion</td>
-              </tr>
-              <tr className="border-b border-gray-800">
-                <td className="py-2 pr-4">Account settings & templates</td>
-                <td className="py-2 pr-4">Supabase</td>
-                <td className="py-2">Until account is terminated or user modifies them</td>
-              </tr>
-              <tr className="border-b border-gray-800">
-                <td className="py-2 pr-4">SMS delivery logs</td>
-                <td className="py-2 pr-4">Supabase</td>
-                <td className="py-2">Retained as part of lead record</td>
-              </tr>
-              <tr className="border-b border-gray-800">
-                <td className="py-2 pr-4">Web server logs</td>
-                <td className="py-2 pr-4">Vercel</td>
-                <td className="py-2">Per Vercel&apos;s data retention policy</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4">Telnyx call records</td>
-                <td className="py-2 pr-4">Telnyx</td>
-                <td className="py-2">Per Telnyx&apos;s data retention policy</td>
-              </tr>
+            <tbody>
+              {RETENTION.map(([type, where, period]) => (
+                <tr key={type} style={{ borderTop: '1px solid rgba(23,63,107,0.12)' }}>
+                  <td className="py-2 pr-3">{type}</td>
+                  <td className="py-2 pr-3">{where}</td>
+                  <td className="py-2">{period}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
-          <div className="mt-4 p-4 rounded-xl" style={{ background: 'rgba(0,229,255,0.06)', border: '1px solid rgba(0,229,255,0.18)' }}>
-            <p className="text-sm font-semibold text-cyan-300 mb-1">Data deletion on account termination</p>
-            <p className="text-sm leading-relaxed text-gray-300">
-              When an account is terminated, all associated data is automatically purged within 90 days. Contact us at any time to request expedited data deletion.
-            </p>
-          </div>
-        </Section>
+        </div>
+        <p className="mt-3">
+          Account holders can request export or deletion at any time by emailing
+          privacy@coaibakersfield.com. We respond within 30 days.
+        </p>
+      </section>
 
-        <Section title="7. Third-Party Services">
-          <ul className="list-disc list-inside space-y-2 text-gray-300">
-            <li><strong>Telnyx</strong> — Voice and SMS routing. Call metadata and message content are processed by Telnyx to deliver the core service. Governed by Telnyx&apos;s privacy policy.</li>
-            <li><strong>Supabase</strong> — Database and authentication provider. All persistent data is stored in Supabase Postgres with row-level security. Governed by Supabase&apos;s privacy policy.</li>
-            <li><strong>Vercel</strong> — Web hosting provider for the CRM dashboard and website. Standard web server logs collected per Vercel&apos;s policies.</li>
-            <li><strong>Resend</strong> — Email delivery provider for account notifications and password resets. Email content processed per Resend&apos;s privacy policy.</li>
-          </ul>
-        </Section>
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>8. Your choices and rights</h2>
+        <ul className="mt-2 grid gap-2 pl-5" style={{ listStyleType: 'disc' }}>
+          <li>Access a copy of the account data we hold.</li>
+          <li>Correct inaccurate business or contact information.</li>
+          <li>Delete the account and its lead records.</li>
+          <li>Export leads and job records in a portable format.</li>
+          <li>Opt out of non-essential email; billing and security notices continue while the account is active.</li>
+          <li>Opt out of text messages at any time by replying STOP.</li>
+        </ul>
+      </section>
 
-        <Section title="8. Children&apos;s Privacy">
-          LeadShield is a business productivity tool designed for professional contractors, tradespeople, and business owners aged 18 and older. We do not knowingly collect any personal information from children under 13. If you believe a child has provided personal data, contact{" "}
-          <a href="mailto:privacy@coaibakersfield.com" className="text-purple-400 underline">
-            privacy@coaibakersfield.com
-          </a>{" "}
-          and we will delete the data immediately.
-        </Section>
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>9. California privacy rights</h2>
+        <p className="mt-2">
+          California residents may request to know, delete, correct, or obtain a portable copy of
+          personal information, and may designate an authorized agent. We do not sell or share personal
+          information as those terms are defined by the CCPA/CPRA, and we will not discriminate against
+          anyone for exercising a privacy right. Email privacy@coaibakersfield.com with “CCPA Request”
+          in the subject line.
+        </p>
+      </section>
 
-        <Section title="9. Your Rights & Choices">
-          <ul className="list-disc list-inside space-y-2 text-gray-300">
-            <li><strong>Access your data</strong> — All data collected is visible within the CRM dashboard at leadshield.live/crm.</li>
-            <li><strong>Export your data</strong> — Contact us to request a copy of your data in a portable format.</li>
-            <li><strong>Delete your data</strong> — Contact us at any time to request full data deletion.</li>
-            <li><strong>Request full data deletion</strong> — Email{" "}
-              <a href="mailto:privacy@coaibakersfield.com" className="text-purple-400 underline">
-                privacy@coaibakersfield.com
-              </a>{" "}
-              with &quot;Data Deletion Request&quot; in the subject line. We will process all requests within 30 days.
-            </li>
-          </ul>
-        </Section>
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>10. Cookies and analytics</h2>
+        <p className="mt-2">
+          We use strictly necessary cookies for authentication and session security. Analytics are
+          aggregated and anonymized; we do not run advertising pixels or sell audience data. You can
+          block cookies in your browser, but the command center requires them to sign you in.
+        </p>
+      </section>
 
-        <Section title="10. California Residents (CCPA)">
-          If you are a California resident, you have the following rights under the California Consumer Privacy Act (CCPA):
-          <ul className="list-disc list-inside space-y-1 text-gray-300 mt-2">
-            <li><strong>Right to Know:</strong> You may request disclosure of the personal information we collect, use, and share.</li>
-            <li><strong>Right to Delete:</strong> You may request deletion of your personal information that we hold.</li>
-            <li><strong>Right to Opt-Out:</strong> We do not sell personal information — but you have the right to opt out of any future sale should our practices change.</li>
-            <li><strong>Right to Non-Discrimination:</strong> We will not discriminate against you for exercising any CCPA right.</li>
-          </ul>
-          <p className="mt-2 text-sm text-gray-300">
-            To make a CCPA request, email{" "}
-            <a href="mailto:privacy@coaibakersfield.com" className="text-purple-400 underline">
-              privacy@coaibakersfield.com
-            </a>{" "}
-            with &quot;CCPA Request&quot; in the subject line.
-          </p>
-        </Section>
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>11. Children</h2>
+        <p className="mt-2">
+          The service is intended for businesses and is not directed to anyone under 18. We do not
+          knowingly collect information from children.
+        </p>
+      </section>
 
-        <Section title="11. Policy Updates">
-          <p className="mb-2">We may update this Privacy Policy from time to time to reflect changes in the service, legal requirements, or our data practices.</p>
-          <ul className="list-disc list-inside space-y-1 text-gray-300">
-            <li>When we make material changes, the &quot;Last Updated&quot; date at the top of this page will be revised.</li>
-            <li>For significant changes, we will notify account holders via email.</li>
-            <li>We encourage you to review this policy periodically for any updates.</li>
-          </ul>
-        </Section>
-
-        <Section title="12. Contact">
-          <strong className="text-white">Chaotically Organized AI</strong>
-          <br />
-          <a href="https://coaibakersfield.com" className="text-purple-400 underline">
-            https://coaibakersfield.com
-          </a>
-          <br />
-          <a href="mailto:privacy@coaibakersfield.com" className="text-purple-400 underline">
-            privacy@coaibakersfield.com
-          </a>
-          <br />
-          <a href="mailto:support@coaibakersfield.com" className="text-purple-400 underline">
-            support@coaibakersfield.com
-          </a>
-          <br /><br />
-          <p className="text-gray-300">
-            We respond to all privacy inquiries within 5 business days. If you have questions about this policy,
-            your data, or your privacy rights, please reach out.
-          </p>
-        </Section>
-      </div>
-    </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="mb-8">
-      <h2 className="text-xl font-semibold text-white mb-3 border-b border-gray-800 pb-2">
-        {title}
-      </h2>
-      <div className="text-gray-300 leading-relaxed">{children}</div>
-    </div>
-  );
-}
-
-function SubSection({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="mb-4 pl-4 border-l-2 border-purple-800">
-      <h3 className="text-base font-medium text-purple-300 mb-1">{title}</h3>
-      <div className="text-gray-300 text-sm leading-relaxed">{children}</div>
-    </div>
-  );
+      <section>
+        <h2 className="font-display text-xl font-black" style={{ color: '#102A43' }}>12. Changes and contact</h2>
+        <p className="mt-2">
+          If we make material changes, we will update the effective date and notify account owners by
+          email. Questions can be sent to privacy@coaibakersfield.com or by mail to Chaotically
+          Organized AI, Bakersfield, CA. We respond to privacy inquiries within five business days.
+        </p>
+      </section>
+    </LegalPage>
+  )
 }

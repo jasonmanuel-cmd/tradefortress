@@ -286,7 +286,7 @@ export default function CredentialsPage() {
       <main id="main-content" tabIndex={-1} className="relative pt-22 pb-24 px-4 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-5">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: C.cyan }}>LeadShield Credentials</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: C.cyan }}>Trade Fortress Credentials</p>
             <h1 className="font-display text-3xl md:text-4xl font-bold mt-2" style={{ color: C.text }}>
               Vendor packets for commercial jobs.
             </h1>

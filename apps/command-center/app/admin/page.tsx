@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { PLANS, normalizePlanKey } from '@/lib/plans'
 
 const C = {
   bg: '#050814', cyan: '#00E5FF', gold: '#FFD700',
@@ -241,11 +242,11 @@ function ClientsPanel() {
                   </td>
                   <td style={{ padding: '14px 12px', color: C.muted, fontSize: '12px' }}>{c.email}</td>
                   <td style={{ padding: '14px 12px', textAlign: 'center' }}>
-                    <select value={c.plan_tier} onChange={e => handleUpdate(c.id, { plan_tier: e.target.value })}
-                      style={s.select}>
-                      <option value="single">Single</option>
-                      <option value="pro">Pro</option>
-                      <option value="agency">Agency</option>
+                    <select value={normalizePlanKey(c.plan_tier)} onChange={e => handleUpdate(c.id, { plan_tier: e.target.value })}
+                      style={s.select} aria-label={`Plan for ${c.business_name}`}>
+                      {PLANS.map(plan => (
+                        <option key={plan.key} value={plan.key}>{plan.name} — ${plan.monthly}</option>
+                      ))}
                     </select>
                   </td>
                   <td style={{ padding: '14px 12px', textAlign: 'center', color: C.gold, fontWeight: 700 }}>

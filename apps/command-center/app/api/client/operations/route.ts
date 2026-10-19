@@ -24,6 +24,15 @@ function problem(status: number, title: string, detail: string) {
   return NextResponse.json({ title, status, detail }, { status })
 }
 
+async function accountBlocked(clientId: string) {
+  const { data } = await admin()
+    .from('clients')
+    .select('status')
+    .eq('id', clientId)
+    .maybeSingle()
+  return data?.status === 'suspended'
+}
+
 async function customerName(db: SupabaseClient, clientId: string, customerId?: string) {
   if (!customerId) return null
   const { data } = await db.from('trade_customers').select('name').eq('id', customerId).eq('client_id', clientId).maybeSingle()
@@ -39,6 +48,7 @@ async function jobName(db: SupabaseClient, clientId: string, jobId?: string) {
 export async function GET() {
   const clientId = await userId()
   if (!clientId) return problem(401, 'Not authenticated', 'Please sign in to continue.')
+  if (await accountBlocked(clientId)) return problem(403, 'Account suspended', 'Contact support to restore access.')
   const db = admin()
   const [customers, jobs, items] = await Promise.all([
     db.from('trade_customers').select('*').eq('client_id', clientId).order('updated_at', { ascending: false }),
@@ -59,6 +69,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const clientId = await userId()
   if (!clientId) return problem(401, 'Not authenticated', 'Please sign in to continue.')
+  if (await accountBlocked(clientId)) return problem(403, 'Account suspended', 'Contact support to restore access.')
   const body = await req.json().catch(() => null)
   const kind = body?.kind as TradeKind
   const title = String(body?.title ?? '').trim()
@@ -90,6 +101,7 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   const clientId = await userId()
   if (!clientId) return problem(401, 'Not authenticated', 'Please sign in to continue.')
+  if (await accountBlocked(clientId)) return problem(403, 'Account suspended', 'Contact support to restore access.')
   const body = await req.json().catch(() => null)
   if (!body?.id || !body?.kind || !statuses.has(body.status)) return problem(422, 'Invalid update', 'Record id, type, and a valid status are required.')
   const table = body.kind === 'job' ? 'trade_jobs' : itemKinds.has(body.kind) ? 'trade_job_items' : null

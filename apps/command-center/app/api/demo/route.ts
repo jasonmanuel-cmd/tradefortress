@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { clientIp, rateLimit } from '@/lib/rate-limit'
+import { normalizeUsPhone } from '@/lib/validation'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-const requestLog = new Map<string, number[]>()
 
 function cleanHeaderValue(value: string) {
   return value.replace(/[^\x20-\x7E]/g, '').trim()
-}
-
-function normalizeUsPhone(phone: string) {
-  const digits = phone.replace(/\D/g, '')
-  if (digits.length === 10) return `+1${digits}`
-  if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`
-  return null
 }
 
 async function getDemoFromNumber() {
@@ -39,12 +33,7 @@ async function getDemoFromNumber() {
 }
 
 function isRateLimited(key: string, limit: number, windowMs: number) {
-  const now = Date.now()
-  const recent = (requestLog.get(key) ?? []).filter((time) => now - time < windowMs)
-  if (recent.length >= limit) return true
-  recent.push(now)
-  requestLog.set(key, recent)
-  return false
+  return !rateLimit(key, limit, windowMs).ok
 }
 
 export async function POST(req: NextRequest) {
@@ -63,7 +52,10 @@ export async function POST(req: NextRequest) {
     const { phone, consent } = body
 
     if (typeof phone !== 'string' || !phone.trim() || consent !== true) {
-      return NextResponse.json({ error: 'Enter a valid phone number.' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Enter a valid phone number and agree to receive the demo message.' },
+        { status: 400 },
+      )
     }
 
     const cleanPhone = normalizeUsPhone(phone)
@@ -71,8 +63,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Enter a 10-digit US phone number.' }, { status: 400 })
     }
 
-    const forwardedFor = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
-    if (isRateLimited(`ip:${forwardedFor}`, 3, 60 * 60 * 1000) || isRateLimited(`phone:${cleanPhone}`, 2, 24 * 60 * 60 * 1000)) {
+    const ip = clientIp(req)
+    if (isRateLimited(`demo:ip:${ip}`, 3, 60 * 60 * 1000) || isRateLimited(`demo:phone:${cleanPhone}`, 2, 24 * 60 * 60 * 1000)) {
       return NextResponse.json({ error: 'Demo limit reached. Please try again later.' }, { status: 429 })
     }
 
@@ -80,7 +72,7 @@ export async function POST(req: NextRequest) {
     if (!demoFromNumber) {
       return NextResponse.json({ error: 'The text demo is temporarily unavailable.' }, { status: 503 })
     }
-    const smsContent = "Trade Fortress demo: This is a one-time example of the LeadShield missed-call reply. No subscription was created. Reply STOP to opt out."
+    const smsContent = "Trade Fortress demo: This is a one-time example of the Trade Fortress missed-call reply. No subscription was created. Reply STOP to opt out."
 
     const smsRes = await fetch('https://api.telnyx.com/v2/messages', {
       method: 'POST',
@@ -110,7 +102,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ ok: true, message: 'Demo text sent. Check your phone in a few seconds.' })
   } catch (err) {
     console.error('Demo API error:', err)
     return NextResponse.json(

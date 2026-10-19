@@ -43,19 +43,36 @@ Use a monitored reply-to mailbox. Test success, provider rejection, bounce, and 
 
 ### 4. Stripe
 
-Create the three recurring prices used by the application and configure a webhook endpoint for the deployed app.
+Create one recurring price per plan and interval (three plans × monthly/annual) and configure a webhook endpoint for the deployed app at `/api/webhooks/stripe`.
 
 Set:
 
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
-- `STRIPE_PRICE_OPERATOR`
-- `STRIPE_PRICE_TEAM`
-- `STRIPE_PRICE_VOICE`
+- `STRIPE_PRICE_STARTER`, `STRIPE_PRICE_STARTER_ANNUAL`
+- `STRIPE_PRICE_OPERATOR`, `STRIPE_PRICE_OPERATOR_ANNUAL`
+- `STRIPE_PRICE_TEAM`, `STRIPE_PRICE_TEAM_ANNUAL`
+- `STRIPE_PRICE_VOICE` (legacy, optional)
 
-Start in Stripe test mode. Verify checkout, subscription activation, payment failure, cancellation, duplicate webhook delivery, and client-access changes before switching to live keys.
+Subscribe the webhook to `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`, and `invoice.payment_failed`.
 
-### 5. Module URLs and health checks
+Start in Stripe test mode. Verify checkout, subscription activation, payment failure, cancellation, duplicate webhook delivery, and client-access changes before switching to live keys. Billing is disabled with a clear message when these variables are absent, so the rest of the app can be reviewed first.
+
+### 5. Application URL, email alerts, and cron
+
+Set:
+
+- `NEXT_PUBLIC_APP_URL` — canonical origin (used for metadata, Stripe redirects, emails)
+- `NEXT_PUBLIC_SUPPORT_EMAIL` — support address shown in the app
+- `NEXT_PUBLIC_TRIAL_DAYS` — trial length, default `14`
+- `SIGNUP_NOTIFY_EMAIL` — where new self-serve trial alerts are delivered
+- `CRON_SECRET` — random value; Vercel Cron sends it as a bearer token to `/api/cron/trial-expiry`
+
+### 6. Migrations
+
+Apply every file in `apps/command-center/supabase/migrations` in filename order. The latest migration (`20261019_add_trial_signup_and_billing.sql`) adds trial metadata, Stripe identifiers, the billing event ledger, and the `expire_finished_trials()` function required by the cron job.
+
+### 7. Module URLs and health checks
 
 Deploy each enabled service and set its user-facing and server health URLs where applicable:
 

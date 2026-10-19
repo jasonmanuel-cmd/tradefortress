@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -9,6 +10,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('setup') === 'required') {
+      setNotice('This deployment is not connected to its database yet. An administrator needs to finish setup.')
+    } else if (params.get('created') === '1') {
+      setNotice('Your account was created. Sign in with the email and password you just chose.')
+    }
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -27,7 +38,10 @@ export default function LoginPage() {
         setLoading(false)
         return
       }
-      router.push(data.destination || '/crm')
+      const params = new URLSearchParams(window.location.search)
+      const requested = params.get('next')
+      const safeNext = requested && requested.startsWith('/') && !requested.startsWith('//') ? requested : null
+      router.push(safeNext || data.destination || '/crm')
     } catch {
       setError('Unable to reach the login service. Please try again.')
       setLoading(false)
@@ -53,17 +67,17 @@ export default function LoginPage() {
           <div className="relative max-w-2xl">
             <div className="flex items-center gap-2 text-xs uppercase tracking-[0.24em]" style={{ color: '#8892A4' }}>
               <span className="inline-flex h-2 w-2 rounded-full bg-[#00E5FF] shadow-[0_0_18px_rgba(0,229,255,0.7)]" />
-              LeadShield CRM
+              Trade Fortress command center
             </div>
 
             <h1 className="font-display mt-5 text-4xl md:text-6xl font-bold leading-tight" style={{ color: '#F5F7FA' }}>
               Sign in to your
-              <span style={{ color: '#00E5FF' }}> CRM dashboard</span>.
+              <span style={{ color: '#00E5FF' }}> command center</span>.
             </h1>
 
             <p className="mt-5 max-w-xl text-sm md:text-base leading-7" style={{ color: '#A6AEC1' }}>
-              View your leads, manage your pipeline, update statuses, and configure your
-              missed-call auto-reply settings. All from one web dashboard.
+              See every lead, job, and follow-up in one place. Update your pipeline, manage
+              paperwork, and adjust your missed-call auto-reply without calling the office.
             </p>
           </div>
         </div>
@@ -74,7 +88,7 @@ export default function LoginPage() {
               Sign in
             </h2>
             <p className="text-sm mt-2" style={{ color: '#8892A4' }}>
-              Sign in to access your CRM and manage your leads.
+              Use the username or email your administrator set up for you.
             </p>
           </div>
 
@@ -107,6 +121,16 @@ export default function LoginPage() {
               style={{ display: 'inline-block', marginTop: '6px', fontSize: '12px', color: '#94A3B8', textDecoration: 'none' }}>
               Forgot password?
             </a>
+
+            {notice && (
+              <div
+                role="status"
+                className="rounded-2xl px-4 py-3 text-sm"
+                style={{ background: 'rgba(0,229,255,0.08)', border: '1px solid rgba(0,229,255,0.22)', color: '#8FE9FF' }}
+              >
+                {notice}
+              </div>
+            )}
 
             {error && (
               <div
@@ -142,8 +166,8 @@ export default function LoginPage() {
               Access note
             </p>
             <p className="text-sm" style={{ color: '#A6AEC1' }}>
-              Your CRM account is managed by your admin. Sign in to view leads, manage your pipeline,
-              and configure your missed-call auto-reply settings.
+              Accounts are managed by your business administrator. If you need a login, ask them to
+              invite you from the admin panel.
             </p>
           </div>
 
@@ -151,19 +175,19 @@ export default function LoginPage() {
             style={{ background: 'rgba(0,229,255,0.06)', border: '1px solid rgba(0,229,255,0.18)' }}>
             <div>
               <p className="text-xs font-semibold mb-0.5" style={{ color: '#00E5FF' }}>
-                Not a CRM client yet?
+                New to Trade Fortress?
               </p>
               <p className="text-xs" style={{ color: '#8892A4' }}>
-                Contact your admin to get set up with a tracking number and CRM access.
+                Start a free trial and we will provision your tracking number and pipeline.
               </p>
             </div>
-            <a
-              href="/"
+            <Link
+              href="/start-trial"
               className="shrink-0 text-xs font-bold px-3 py-2 rounded-xl transition-all"
               style={{ background: 'rgba(0,229,255,0.15)', color: '#00E5FF', border: '1px solid rgba(0,229,255,0.3)' }}
             >
-              Learn More →
-            </a>
+              Start trial →
+            </Link>
           </div>
         </div>
       </div>
