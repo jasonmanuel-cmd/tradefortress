@@ -121,7 +121,7 @@ export default function CrmDashboard() {
       <div className="min-h-screen flex items-center justify-center px-4" style={{ background: C.bg }}>
         <div style={{ ...PANEL, maxWidth: '420px', textAlign: 'center' }}>
           <p style={{ color: C.muted, fontSize: '14px', margin: 0 }}>
-            This dashboard is for LeadShield CRM clients.
+            This dashboard is for Trade Fortress clients.
           </p>
         </div>
       </div>
@@ -151,10 +151,16 @@ export default function CrmDashboard() {
               </button>
             </p>
           </div>
-          <a href="/crm/settings"
-            style={{ color: C.cyan, fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-            SMS Settings →
-          </a>
+          <div className="flex items-center gap-4">
+            <a href="/crm/billing"
+              style={{ color: C.muted, fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+              Billing
+            </a>
+            <a href="/crm/settings"
+              style={{ color: C.cyan, fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+              SMS Settings →
+            </a>
+          </div>
         </div>
 
         <a href="/crm/operations" style={{ ...PANEL, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px', textDecoration: 'none', borderColor: 'rgba(255,215,0,.22)' }}>
@@ -177,7 +183,7 @@ export default function CrmDashboard() {
                 Build commercial vendor packets before paperwork stalls the job.
               </h2>
               <p style={{ margin: 0, color: C.muted, fontSize: '13px', lineHeight: 1.5, maxWidth: '720px' }}>
-                Track insurance, W-9, license, bond, and safety documents, then export a buyer-ready packet from LeadShield Credentials.
+                Track insurance, W-9, license, bond, and safety documents, then export a buyer-ready packet from Trade Fortress Credentials.
               </p>
             </div>
             <a href="/crm/credentials"
@@ -205,7 +211,7 @@ export default function CrmDashboard() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
               <div>
                 <h2 style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: 700, color: C.cyan }}>
-                  👋 Welcome to LeadShield!
+                  👋 Welcome to Trade Fortress!
                 </h2>
                 <p style={{ margin: '0 0 4px', fontSize: '14px', color: C.text, lineHeight: 1.5 }}>
                   Your CRM is ready. Leads from your tracking number will appear here automatically.

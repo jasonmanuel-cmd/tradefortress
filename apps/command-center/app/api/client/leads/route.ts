@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { jsonError, noStore } from '@/lib/api'
+import { getClientRecord } from '@/lib/session'
+import { cleanMultiline, cleanText, oneOf } from '@/lib/validation'
+
+const LEAD_STATUSES = ['new', 'called_back', 'quoted', 'booked', 'lost'] as const
 
 async function getClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -9,9 +14,9 @@ async function getClient() {
   return createServerClient(url, anonKey, {
     cookies: {
       getAll() { return cookieStore.getAll() },
-        setAll(cookiesToSet, _headers) {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
-        },
+      setAll(cookiesToSet, _headers) {
+        cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
+      },
     },
   })
 }
@@ -29,17 +34,15 @@ export async function GET() {
   const supabase = await getClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) {
-    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    return jsonError('Not authenticated', 401)
   }
 
-  const { data: client } = await getAdmin()
-    .from('clients')
-    .select('id')
-    .eq('id', user.id)
-    .maybeSingle()
-
-  if (!client) {
-    return NextResponse.json({ leads: [] })
+  const profile = await getClientRecord(user.id)
+  if (!profile) {
+    return noStore(NextResponse.json({ leads: [], client: null }))
+  }
+  if (profile.status === 'suspended') {
+    return jsonError('This account is suspended. Contact support to restore access.', 403)
   }
 
   const { data: leads, error } = await getAdmin()
@@ -49,49 +52,72 @@ export async function GET() {
     .order('timestamp', { ascending: false })
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Lead list failed:', error.message)
+    return jsonError('Could not load leads. Please refresh and try again.', 500)
   }
 
-  return NextResponse.json({ leads })
+  return noStore(NextResponse.json({ leads: leads ?? [] }))
 }
 
 export async function PATCH(req: NextRequest) {
   const supabase = await getClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) {
-    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    return jsonError('Not authenticated', 401)
+  }
+
+  const profile = await getClientRecord(user.id)
+  if (!profile) return jsonError('No business account is linked to this login.', 403)
+  if (profile.status === 'suspended') {
+    return jsonError('This account is suspended. Contact support to restore access.', 403)
   }
 
   let body: Record<string, unknown>
-  try { body = await req.json() } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }) }
+  try { body = await req.json() } catch { return jsonError('Invalid JSON', 400) }
 
-  const { id, status, contact_name, notes } = body as Record<string, string | undefined>
+  const id = typeof body.id === 'string' ? body.id : ''
+  if (!id) return jsonError('A lead id is required.', 400)
 
-  if (id && status) {
-    const now = new Date().toISOString()
-    const updates: Record<string, unknown> = { status, notes: notes ?? null, updated_at: now }
-    if (status === 'called_back') updates.called_back_at = now
+  const updates: Record<string, unknown> = { updated_at: new Date().toISOString() }
+  let hasUpdate = false
 
-    const { error } = await getAdmin()
-      .from('lead_logs')
-      .update(updates)
-      .eq('id', id)
-      .eq('client_id', user.id)
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json({ ok: true })
+  if (body.status !== undefined) {
+    const status = oneOf(body.status, LEAD_STATUSES)
+    if (!status) return jsonError('Choose a valid lead status.', 422)
+    updates.status = status
+    if (status === 'called_back') updates.called_back_at = new Date().toISOString()
+    hasUpdate = true
   }
 
-  if (id && contact_name) {
-    const { error } = await getAdmin()
-      .from('lead_logs')
-      .update({ contact_name, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .eq('client_id', user.id)
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json({ ok: true })
+  if (body.contact_name !== undefined) {
+    const contactName = cleanText(body.contact_name, 120)
+    updates.contact_name = contactName || null
+    hasUpdate = true
   }
 
-  return NextResponse.json({ error: 'id and status or contact_name required' }, { status: 400 })
+  if (body.notes !== undefined) {
+    const notes = cleanMultiline(body.notes, 5000)
+    updates.notes = notes || null
+    hasUpdate = true
+  }
+
+  if (!hasUpdate) {
+    return jsonError('Nothing to update. Provide a status, contact name, or notes.', 400)
+  }
+
+  const { data, error } = await getAdmin()
+    .from('lead_logs')
+    .update(updates)
+    .eq('id', id)
+    .eq('client_id', user.id)
+    .select('id')
+    .maybeSingle()
+
+  if (error) {
+    console.error('Lead update failed:', error.message)
+    return jsonError('Could not update this lead. Please try again.', 500)
+  }
+  if (!data) return jsonError('Lead not found.', 404)
+
+  return noStore(NextResponse.json({ ok: true }))
 }

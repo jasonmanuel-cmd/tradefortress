@@ -1,11 +1,17 @@
 import type { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date('2026-07-22')
+  const lastModified = new Date()
 
   return [
-    { url: 'https://leadshield.live/', lastModified, changeFrequency: 'weekly', priority: 1 },
-    { url: 'https://leadshield.live/missed-call-text-back', lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    { url: 'https://leadshield.live/privacy', lastModified, changeFrequency: 'yearly', priority: 0.2 },
+    { url: `${SITE_URL}/`, lastModified, changeFrequency: 'weekly', priority: 1 },
+    { url: `${SITE_URL}/pricing`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${SITE_URL}/start-trial`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${SITE_URL}/missed-call-text-back`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${SITE_URL}/demo`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${SITE_URL}/privacy`, lastModified, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${SITE_URL}/terms`, lastModified, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${SITE_URL}/sms-policy`, lastModified, changeFrequency: 'yearly', priority: 0.3 },
   ]
 }

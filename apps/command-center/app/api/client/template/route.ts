@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { cleanMultiline } from '@/lib/validation'
 
 async function getClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -40,6 +41,13 @@ export async function GET() {
     admin.from('text_templates').select('*').eq('client_id', user.id).maybeSingle(),
   ])
 
+  if (clientRes.data?.status === 'suspended') {
+    return NextResponse.json(
+      { error: 'This account is suspended. Contact support to restore access.' },
+      { status: 403 },
+    )
+  }
+
   return NextResponse.json({
     client: clientRes.data ?? null,
     telephony: configRes.data ?? null,
@@ -57,12 +65,31 @@ export async function PUT(req: NextRequest) {
   let body: Record<string, unknown>
   try { body = await req.json() } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }) }
 
-  const sms_body = body.sms_body as string | undefined
+  const sms_body = cleanMultiline(body.sms_body, 1000)
   if (!sms_body) {
-    return NextResponse.json({ error: 'sms_body is required' }, { status: 400 })
+    return NextResponse.json({ error: 'Write a message before saving.' }, { status: 422 })
+  }
+  if (!/stop/i.test(sms_body)) {
+    return NextResponse.json(
+      { error: 'Include opt-out instructions such as "Reply STOP to opt out." Carriers require it.' },
+      { status: 422 },
+    )
   }
 
   const admin = getAdmin()
+
+  const { data: profile } = await admin
+    .from('clients')
+    .select('status')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  if (profile?.status === 'suspended') {
+    return NextResponse.json(
+      { error: 'This account is suspended. Contact support to restore access.' },
+      { status: 403 },
+    )
+  }
 
   const { data: existing } = await admin
     .from('text_templates')
@@ -87,6 +114,9 @@ export async function PUT(req: NextRequest) {
     error = result.error
   }
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('SMS template save failed:', error.message)
+    return NextResponse.json({ error: 'Could not save the template. Please try again.' }, { status: 500 })
+  }
   return NextResponse.json({ ok: true })
 }

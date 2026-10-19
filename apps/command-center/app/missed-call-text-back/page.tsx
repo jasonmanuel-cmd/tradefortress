@@ -9,7 +9,7 @@ const STEPS = [
     body: 'Within moments of the missed call, your customer receives a professional text message from your number. You write the message — "Hey, this is Mike from Mike\'s Plumbing — I\'m on a job right now but I got your call. What can I help you with?" — and the system sends it automatically.' },
   { n: '03', color: '#FFD700',
     title: 'Lead logged in your CRM',
-    body: 'Every missed call becomes a lead card in your LeadShield dashboard. See who called, when, the message that was sent, and start tracking the lead through your pipeline.' },
+    body: 'Every missed call becomes a lead card in your Trade Fortress dashboard. See who called, when, the message that was sent, and start tracking the lead through your pipeline.' },
   { n: '04', color: '#00E5FF',
     title: 'You call them back and close the job',
     body: 'When you\'re free, check your pipeline, call the lead back, and move them through the stages. The whole cycle — from missed call to booked job — lives in one place.' },
@@ -21,9 +21,9 @@ const FAQS = [
   { q: 'How fast is the auto-reply?', a: 'The SMS fires within seconds of the missed call being detected. Your customer gets a response before they have even put the phone down.' },
   { q: 'Can I customize the message?', a: 'Yes. Each client sets their own SMS template through the CRM settings. Change it anytime for different seasons, promotions, or services.' },
   { q: 'Do my customers know its automated?', a: 'No. The SMS comes from your tracking number and contains the message you wrote. It looks exactly like a personal text from your business.' },
-  { q: 'How do I see who called?', a: 'Every missed call is logged immediately in your CRM dashboard at leadshield.live/crm. See the caller number, timestamp, and SMS status.' },
+  { q: 'How do I see who called?', a: 'Every missed call is logged immediately in your Trade Fortress dashboard. See the caller number, timestamp, and SMS status.' },
   { q: 'Can I use this for multiple businesses?', a: 'Yes. Each client gets their own tracking number, isolated CRM dashboard, and custom SMS template. Manage them all from one admin panel.' },
-  { q: 'How is this different from a regular forwarding service?', a: 'Regular forwarding just sends the call to voicemail. LeadShield detects the missed call, sends an instant SMS, AND logs it as a lead in your CRM — all automatically.' },
+  { q: 'How is this different from a regular forwarding service?', a: 'Regular forwarding just sends the call to voicemail. Trade Fortress detects the missed call, sends an instant SMS, AND logs it as a lead in your CRM — all automatically.' },
 ]
 
 export default function MissedCallPage() {
@@ -37,12 +37,13 @@ export default function MissedCallPage() {
           <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg font-black"
             style={{ background: 'linear-gradient(135deg,#0070FF,#00E5FF)' }}>🛡️</div>
           <span className="font-bold text-xl tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#F5F7FA' }}>
-            LeadShield
+            Trade Fortress
           </span>
         </div>
 
         <div className="hidden md:flex items-center gap-6 text-sm font-medium" style={{ color: '#8892A4' }}>
-          <a href="/"                  className="hover:text-white transition-colors">CRM</a>
+          <a href="/"                  className="hover:text-white transition-colors">Home</a>
+          <a href="/pricing"           className="hover:text-white transition-colors">Pricing</a>
           <a href="#how-it-works"      className="hover:text-white transition-colors">How It Works</a>
           <a href="#faq"               className="hover:text-white transition-colors">FAQ</a>
         </div>
@@ -53,10 +54,10 @@ export default function MissedCallPage() {
             style={{ color: '#8892A4' }}>
             Sign In
           </Link>
-          <Link href="/admin"
+          <Link href="/start-trial"
             className="text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90"
             style={{ background: 'linear-gradient(135deg,#00E5FF,#0070FF)', color: '#050814' }}>
-            Admin Login
+            Start Free Trial
           </Link>
         </div>
       </nav>
@@ -88,7 +89,7 @@ export default function MissedCallPage() {
           </h1>
 
           <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-10" style={{ color: '#A6AEC1' }}>
-            When you are on a job and cannot answer, LeadShield sends an instant SMS to your customer
+            When you are on a job and cannot answer, Trade Fortress sends an instant SMS to your customer
             and logs the lead in your CRM.{' '}
             <strong style={{ color: '#F5F7FA' }}>You close the job when you are free.</strong>
           </p>
@@ -97,7 +98,7 @@ export default function MissedCallPage() {
             <Link href="/signon"
               className="px-10 py-4 rounded-xl font-bold text-lg transition-all hover:opacity-95 hover:scale-[1.02]"
               style={{ background: 'linear-gradient(135deg,#00E5FF,#0070FF)', color: '#050814', boxShadow: '0 0 40px rgba(0,229,255,0.28)', fontFamily: 'Space Grotesk, sans-serif' }}>
-              Access Your CRM →
+              Start Free Trial →
             </Link>
             <Link href="/"
               className="px-10 py-4 rounded-xl font-bold text-lg transition-colors"
@@ -143,7 +144,7 @@ export default function MissedCallPage() {
               {' '}— while you are on someone else&apos;s job.
             </p>
             <p>
-              LeadShield catches every one of those calls — sends an instant SMS, logs the lead in your CRM,
+              Trade Fortress catches every one of those calls — sends an instant SMS, logs the lead in your CRM,
               and puts everything you need to close the job at your fingertips.
             </p>
           </div>
@@ -187,7 +188,7 @@ export default function MissedCallPage() {
           style={{ background: 'rgba(0,229,255,0.04)', border: '1px solid rgba(0,229,255,0.15)' }}>
           <div className="flex-1">
             <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#00E5FF' }}>
-              LeadShield CRM
+              Trade Fortress
             </div>
             <h3 className="text-2xl font-bold mb-3" style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#F5F7FA' }}>
               Every lead, tracked end to end
@@ -195,7 +196,7 @@ export default function MissedCallPage() {
             <p className="text-sm leading-relaxed" style={{ color: '#A6AEC1' }}>
               The missed-call system feeds directly into your CRM. Each lead gets a card with status tracking,
               notes, contact management, and full pipeline visibility. Sign in at{' '}
-              <strong style={{ color: '#00E5FF' }}>leadshield.live/crm</strong>.
+              <strong style={{ color: '#00E5FF' }}>your Trade Fortress command center</strong>.
             </p>
           </div>
           <div className="flex flex-col gap-3 flex-shrink-0">
@@ -279,7 +280,7 @@ export default function MissedCallPage() {
           <Link href="/signon"
             className="inline-block px-12 py-5 rounded-xl font-bold text-xl text-[#050814] transition-all hover:opacity-95 hover:scale-105"
             style={{ background: 'linear-gradient(135deg,#00E5FF,#0070FF)', boxShadow: '0 0 50px rgba(0,229,255,0.3)', fontFamily: 'Space Grotesk, sans-serif' }}>
-            Access Your CRM →
+            Start Free Trial →
           </Link>
         </div>
       </section>
@@ -295,7 +296,7 @@ export default function MissedCallPage() {
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
                   style={{ background: 'linear-gradient(135deg,#0070FF,#00E5FF)' }}>🛡️</div>
                 <span className="font-bold text-xl" style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#F5F7FA' }}>
-                  LeadShield
+                  Trade Fortress
                 </span>
               </div>
               <p className="text-sm leading-relaxed mb-4" style={{ color: '#8892A4', maxWidth: '280px' }}>
@@ -316,9 +317,12 @@ export default function MissedCallPage() {
               <div className="space-y-2.5">
                 {[
                   { href: '/missed-call-text-back', label: 'Missed Call System' },
-                  { href: '/',                       label: 'CRM' },
+                  { href: '/',                       label: 'Home' },
+                  { href: '/pricing',                label: 'Pricing' },
                   { href: '#faq',                    label: 'FAQ' },
                   { href: '/privacy',                label: 'Privacy Policy' },
+                  { href: '/terms',                  label: 'Terms of Service' },
+                  { href: '/sms-policy',             label: 'SMS & Consent Policy' },
                 ].map(({ href, label }) => (
                   <a key={label} href={href}
                     className="block text-sm transition-colors" style={{ color: '#8892A4' }}>
@@ -330,13 +334,13 @@ export default function MissedCallPage() {
 
             <div>
               <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#8892A4' }}>
-                CRM Access
+                Get Started
               </p>
               <div className="space-y-2.5 mb-5">
                 {[
-                  { href: '/signon',  label: 'Sign In' },
-                  { href: '/crm',     label: 'CRM Dashboard' },
-                  { href: '/admin',   label: 'Admin Panel' },
+                  { href: '/start-trial', label: 'Start Free Trial' },
+                  { href: '/signon',      label: 'Client Sign In' },
+                  { href: '/pricing',     label: 'Plans & Pricing' },
                 ].map(({ href, label }) => (
                   <a key={label} href={href}
                     className="block text-sm transition-colors" style={{ color: '#8892A4' }}>
@@ -354,10 +358,11 @@ export default function MissedCallPage() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8"
             style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             <p className="text-xs" style={{ color: '#8892A4' }}>
-              &copy; 2026 Chaotically Organized AI. All rights reserved. &nbsp;·&nbsp; leadshield.live
+              &copy; 2026 Chaotically Organized AI. All rights reserved.
             </p>
             <div className="flex gap-5 text-xs" style={{ color: '#8892A4' }}>
-              <a href="/privacy"                      className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="/privacy"                      className="hover:text-white transition-colors">Privacy</a>
+              <a href="/terms"                        className="hover:text-white transition-colors">Terms</a>
               <a href="https://coaibakersfield.com"
                 target="_blank" rel="noreferrer"      className="hover:text-white transition-colors">
                 coaibakersfield.com
