@@ -116,11 +116,10 @@ function chooseProvider() {
   return configured[0];
 }
 
+const { applyCors } = require('./_cors');
+
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (!applyCors(req, res, { methods: 'POST, OPTIONS', headers: 'Authorization, Content-Type' })) return;
 
   const MASTER_PASSWORD = process.env.APP_PASSWORD;
   if (!MASTER_PASSWORD) {
