@@ -15,13 +15,11 @@
 const { escalate } = require('./scrape/pipeline/escalation');
 const { isAllowed } = require('./scrape/utils/robots');
 const { detectCaptcha } = require('./scrape/transport/captcha');
+const { applyCors } = require('./_cors');
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Authorization');
+  if (!applyCors(req, res, { methods: 'GET, OPTIONS' })) return;
   res.setHeader('X-Robots-Tag', 'noindex');
-  if (req.method === 'OPTIONS') return res.status(200).end();
 
   const MASTER_PASSWORD = process.env.APP_PASSWORD;
   if (!MASTER_PASSWORD) {

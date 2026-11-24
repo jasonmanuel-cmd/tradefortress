@@ -11,12 +11,10 @@
 //   placedetails — single place_id → full Place Details (phone, website, hours, etc.)
 //   default      — NearbySearch with keyword + pagination
 
+const { applyCors } = require('./_cors');
+
 module.exports = async function handler(req, res) {
-  // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Authorization');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (!applyCors(req, res, { methods: 'GET, OPTIONS' })) return;
 
   // AUTH CHECK — no hardcoded fallback; misconfigured env = explicit 500
   const MASTER_PASSWORD = process.env.APP_PASSWORD;
